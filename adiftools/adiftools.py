@@ -4,6 +4,7 @@ import pandas as pd
 
 from adiftools.errors import AdifParserError
 
+
 class ADIFParser():
     ''' ADIFParser class '''
 
@@ -13,11 +14,9 @@ class ADIFParser():
         self._number_of_records = 0
 
         self.df_adif = pd.DataFrame()
-        
 
     def read_adi(self, file_path, enable_timestamp=False):
         ''' read adi file and return a DataFrame '''
-
         df = pd.DataFrame()
 
         with open(file_path, 'r') as file:
@@ -46,7 +45,7 @@ class ADIFParser():
                     r_df.index = [i]
                     print(r_df)
                     df = pd.merge(df, r_df, how='outer')
-        
+
         # reset index
         # df.reset_index(drop=True, inplace=True)
         self.df_adif = df
@@ -61,7 +60,7 @@ class ADIFParser():
             df = self._add_timestamp(df)
 
         return df
-    
+
     def to_csv(self, file_path):
         ''' save ADIF DataFrame to csv file '''
         self.df_adif.to_csv(file_path, index=False)
@@ -69,7 +68,8 @@ class ADIFParser():
     @classmethod
     def _add_timestamp(cls, df):
         ''' add timestamp column to DataFrame '''
-        df['timestamp'] = pd.to_datetime(df['QSO_DATE'] + df['TIME_ON'], format='%Y%m%d%H%M%S')
+        df['timestamp'] = pd.to_datetime(df['QSO_DATE'] + df['TIME_ON'],
+                                         format='%Y%m%d%H%M%S')
         return df
 
     @classmethod
@@ -78,11 +78,11 @@ class ADIFParser():
         fields = re.findall(r'<(.*?):(\d+)>([^<]*)', record)
         d = {field[0].upper().strip(): field[2].strip() for field in fields}
         return d
-    
+
     @property
     def fields(self):
         return self._fields
-    
+
     @property
     def number_of_records(self):
         return self._number_of_records
