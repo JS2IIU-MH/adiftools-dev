@@ -5,19 +5,21 @@
 
 ----------------------
 
-# adiftools: adif file utility tools
+# adiftools: adif file utility tools for all amateur radio stations
 
 | Item | Description |
 | --- | --- |
-| Testing | |
+| Testing | ![](https://byob.yarr.is/JS2IIU-MH/adiftools-dev/passing_lints) |
 | Package | |
-| Meta | |
+| Meta | [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](LICENSE) ![](https://byob.yarr.is/JS2IIU-MH/adiftools-dev/time1) |
 
 ## What is it?
 
 **adiftools** is a Python package that provides utilities for ADIF data which is used for the QSO logging file format.
 
 ## Main Features
+
+- **ADIF file parser**: read ADIF file and convert to Pandas DataFrame
 
 
 ## Install
