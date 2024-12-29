@@ -2,8 +2,10 @@ import re
 
 import pandas as pd
 
-from adiftools.errors import AdifParserError
-
+try:
+    from adiftools.errors import AdifParserError
+except ModuleNotFoundError:
+    from errors import AdifParserError
 
 class ADIFParser():
     ''' ADIFParser class '''
@@ -34,7 +36,7 @@ class ADIFParser():
         for i, record in enumerate(adif_data):
             record = record.strip()
 
-            if record[:5] == '<CALL':
+            if record[:5] == '<CALL' and record[-5:] == '<EOR>':
                 d = self._parse_adif_record(record)
                 series = pd.Series(d)
 
@@ -43,7 +45,6 @@ class ADIFParser():
                 else:
                     r_df = series.to_frame().T
                     r_df.index = [i]
-                    print(r_df)
                     df = pd.merge(df, r_df, how='outer')
 
         # reset index
@@ -93,7 +94,8 @@ def main():
     parser = ADIFParser()
     df = parser.read_adi(file_path)
 
-    df.to_csv('tests/sample.csv')
+    # df.to_csv('tests/sample.csv')
+    print(df.head())
 
 
 if __name__ == '__main__':
