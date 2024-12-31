@@ -15,6 +15,7 @@ except ModuleNotFoundError:
 except ImportError:
     from adifgraph import monthly_qso
 
+
 class ADIFParser():
     ''' ADIFParser class '''
 
@@ -44,7 +45,8 @@ class ADIFParser():
         for i, record in enumerate(adif_data):
             record = record.strip()
 
-            if record[:5].upper() == '<CALL' and record[-5:].upper() == '<EOR>':
+            if record[:5].upper() == '<CALL' and\
+                    record[-5:].upper() == '<EOR>':
                 d = self._parse_adif_record(record)
                 series = pd.Series(d)
 
@@ -104,7 +106,7 @@ class ADIFParser():
 def main():
     file_path = 'tests/sample.adi'
     parser = ADIFParser()
-    df = parser.read_adi(file_path)
+    _ = parser.read_adi(file_path)
 
     # df.to_csv('tests/sample.csv')
     # print(df.head(50))

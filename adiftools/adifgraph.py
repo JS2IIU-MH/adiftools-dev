@@ -32,7 +32,7 @@ def monthly_qso(df, fname):
         ax.text(rect.get_x() + rect.get_width() / 2., height + 1,
                 '%d' % int(height), ha='center', va='bottom',
                 size='small', rotation=text_rotation)
-        
+
     # set layout and save to file
     plt.subplots_adjust(left=0.08, right=0.98, bottom=0.18, top=0.93)
     plt.savefig(fname)
@@ -44,7 +44,7 @@ def main():
     file_path = 'tests/sample_large.adi'
     parser = ADIFParser()
     df = parser.read_adi(file_path)
-    plot_monthly_qso(df, 'tests/monthly_qso_aa.png')
+    monthly_qso(df, 'tests/monthly_qso_aa.png')
 
 
 if __name__ == '__main__':
