@@ -46,7 +46,8 @@
     - A path, or a Python file-like object of plot's PNG or JPG file
   - Returns:
     - `None`
-    <img src="docs/monthly_qso_aa.png" width=500>
+  
+    <img src="docs/monthly_qso_aa.png" width=600>
 
 
 ## Install
