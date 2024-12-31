@@ -43,7 +43,7 @@
     Generate bar plot of monthly QSOs and save png or jpg file. 
   - Patameters:
     - `fname`: str or path-like or binary file-like
-    - A path, or a Python file-like object of plot's PNG or JPG file
+      - A path, or a Python file-like object of plot's PNG or JPG file
   - Returns:
     - `None`
   
@@ -61,6 +61,7 @@ pip install adiftools
 ## Dependencies
 - [Pandas](https://pandas.pydata.org)
 - [numpy](https://numpy.org/doc/stable/index.html)
+- [matplotlib](https://matplotlib.org)
 
 ## Licence
 [MIT](LICENSE)

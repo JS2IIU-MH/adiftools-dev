@@ -2,11 +2,12 @@
 
 from adiftools import adiftools
 
+
 at = adiftools.ADIFParser()
 file_path = 'tests/sample.adi'
 df = at.read_adi(file_path)
 
-def test_read_adi():    
+def test_read_adi():
     assert df.shape == (126, 14)
     assert df.columns.tolist() == [
         'CALL', 'MODE', 'RST_SENT', 'RST_RCVD',
@@ -14,9 +15,11 @@ def test_read_adi():
         'TIME_OFF', 'BAND', 'FREQ', 'STATION_CALLSIGN',
         'MY_GRIDSQUARE', 'COMMENT', 'GRIDSQUARE']
 
+
 def test_plot_monthly():
     at.plot_monthly('tests/monthly_qso_test.png')
     assert True
+
 
 def test_number_of_records():
     at = adiftools.ADIFParser()
