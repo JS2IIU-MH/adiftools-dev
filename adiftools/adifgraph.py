@@ -1,0 +1,51 @@
+import matplotlib.pyplot as plt
+import pandas as pd
+
+
+def monthly_qso(df, fname):
+    ''' plot monthly QSO '''
+    df['QSO_DATE'] = pd.to_datetime(df['QSO_DATE'])
+    df['QSO_DATE'] = df['QSO_DATE'].dt.to_period('M')
+    df = df.groupby('QSO_DATE').size().reset_index(name='counts')
+    df.set_index('QSO_DATE', inplace=True)
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+    bar = ax.bar(df.index.astype(str), df['counts'])
+
+    # basic graph elements
+    plt.title('Monthly QSO')
+    plt.xlabel('Month')
+    plt.ylabel('Number of QSO')
+    plt.xticks(rotation=90)
+    plt.grid(axis='y')
+    ax.set_axisbelow(True)
+    plt.legend(['Number of QSO'], loc='upper right')
+
+    # add value on top of each bar
+    if len(df) < 24:
+        text_rotation = 0
+    else:
+        text_rotation = 90
+
+    for rect in bar:
+        height = rect.get_height()
+        ax.text(rect.get_x() + rect.get_width() / 2., height + 1,
+                '%d' % int(height), ha='center', va='bottom',
+                size='small', rotation=text_rotation)
+        
+    # set layout and save to file
+    plt.subplots_adjust(left=0.08, right=0.98, bottom=0.18, top=0.93)
+    plt.savefig(fname)
+    plt.close()
+
+
+def main():
+    from adiftools import ADIFParser
+    file_path = 'tests/sample_large.adi'
+    parser = ADIFParser()
+    df = parser.read_adi(file_path)
+    plot_monthly_qso(df, 'tests/monthly_qso_aa.png')
+
+
+if __name__ == '__main__':
+    main()

@@ -1,5 +1,6 @@
 numpy
 pandas
+matplotlib
 python-dateutil==2.9.0.post0
 pytz==2024.2
 six==1.17.0

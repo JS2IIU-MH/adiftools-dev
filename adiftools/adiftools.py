@@ -6,7 +6,14 @@ try:
     from adiftools.errors import AdifParserError
 except ModuleNotFoundError:
     from errors import AdifParserError
-
+except ImportError:
+    from errors import AdifParserError
+try:
+    from adiftools.adifgraph import monthly_qso
+except ModuleNotFoundError:
+    from adifgraph import monthly_qso
+except ImportError:
+    from adifgraph import monthly_qso
 
 class ADIFParser():
     ''' ADIFParser class '''
@@ -28,7 +35,7 @@ class ADIFParser():
         # skip adif header part
         start_line = 0
         for i, line in enumerate(lines):
-            if "<CALL" in line:
+            if ("<CALL" in line) or ("<call" in line):
                 start_line = i
                 break
 
@@ -37,7 +44,7 @@ class ADIFParser():
         for i, record in enumerate(adif_data):
             record = record.strip()
 
-            if record[:5] == '<CALL' and record[-5:] == '<EOR>':
+            if record[:5].upper() == '<CALL' and record[-5:].upper() == '<EOR>':
                 d = self._parse_adif_record(record)
                 series = pd.Series(d)
 
@@ -66,6 +73,10 @@ class ADIFParser():
     def to_csv(self, file_path):
         ''' save ADIF DataFrame to csv file '''
         self.df_adif.to_csv(file_path, index=False)
+
+    def plot_monthly(self, file_path):
+        ''' plot monthly QSO '''
+        monthly_qso(self.df_adif, file_path)
 
     @classmethod
     def _add_timestamp(cls, df):
@@ -96,7 +107,7 @@ def main():
     df = parser.read_adi(file_path)
 
     # df.to_csv('tests/sample.csv')
-    print(df.head())
+    # print(df.head(50))
 
 
 if __name__ == '__main__':
