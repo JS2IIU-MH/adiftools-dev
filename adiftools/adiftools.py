@@ -7,6 +7,7 @@ try:
 except ModuleNotFoundError:
     from errors import AdifParserError
 
+
 class ADIFParser():
     ''' ADIFParser class '''
 
