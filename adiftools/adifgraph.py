@@ -39,12 +39,30 @@ def monthly_qso(df, fname):
     plt.close()
 
 
+def band_percentage(df, fname):
+    ''' generate circle graph for band percentage '''
+    # caclulate mode percentage
+    if 'BAND' in df.columns:
+        mode_counts = df['BAND'].value_counts()
+    else:
+        raise ValueError('BAND column not found in DataFrame')
+
+    # plot circle graph
+    _, ax = plt.subplots()
+    ax.pie(mode_counts, labels=mode_counts.index, autopct='%1.1f%%',
+           startangle=90, counterclock=False)
+    plt.title('Band Percentage')
+    plt.savefig(fname)
+    plt.close()
+
+
 def main():
     from adiftools import ADIFParser
     file_path = 'tests/sample_large.adi'
     parser = ADIFParser()
     df = parser.read_adi(file_path)
-    monthly_qso(df, 'tests/monthly_qso_aa.png')
+    # monthly_qso(df, 'tests/monthly_qso_aa.png')
+    band_percentage(df, 'tests/percentage_band.png')
 
 
 if __name__ == '__main__':

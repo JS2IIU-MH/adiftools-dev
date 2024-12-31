@@ -35,7 +35,7 @@
     - `enable_timestamp`: bool, default: `False`
       - If True, add row named ['timestamp'] to DataFrame which is generated from ADIF file. The row ['timestamp'] is `datetime64[ns]` type and based on rows `'QSO_DATE'` and `'TIME_ON'`.
 
-- **ADIF plot generator**: generate matplotlib plot from ADIF data (pandas.DataFrame)
+- **ADIF data monthly plot**: generate manthly QSO plot
   - Call signature:
     ```python
     adif_dataframe.plot_monthly(fname)
@@ -48,6 +48,20 @@
     - `None`
   
     <img src="docs/monthly_qso_aa.png" width=600>
+
+- **Band percentage plot**: generate pie plot to show QSO-Band percentage
+  - Call signature:
+    ```python
+    adif_dataframe.plot_band_percentage(fname)
+    ```
+    Generate pie plot of QSO-band counts and save png or jpg file. 
+  - Patameters:
+    - `fname`: str or path-like or binary file-like
+      - A path, or a Python file-like object of plot's PNG or JPG file
+  - Returns:
+    - `None`
+
+    <img src="docs/percentage_band.png" width=500>
 
 
 ## Install

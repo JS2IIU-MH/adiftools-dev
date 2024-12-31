@@ -9,11 +9,11 @@ except ModuleNotFoundError:
 except ImportError:
     from errors import AdifParserError
 try:
-    from adiftools.adifgraph import monthly_qso
+    from adiftools.adifgraph import monthly_qso, band_percentage
 except ModuleNotFoundError:
-    from adifgraph import monthly_qso
+    from adifgraph import monthly_qso, band_percentage
 except ImportError:
-    from adifgraph import monthly_qso
+    from adifgraph import monthly_qso, band_percentage
 
 
 class ADIFParser():
@@ -72,26 +72,31 @@ class ADIFParser():
 
         return df
 
-    def to_csv(self, file_path):
+    def to_csv(self, fname):
         ''' save ADIF DataFrame to csv file '''
-        self.df_adif.to_csv(file_path, index=False)
+        self.df_adif.to_csv(fname, index=False)
 
-    def plot_monthly(self, file_path):
-        ''' plot monthly QSO '''
-        monthly_qso(self.df_adif, file_path)
+    def plot_monthly(self, fname):
+        ''' plot monthly QSO bar chart'''
+        monthly_qso(self.df_adif, fname)
+
+    def plot_band_percentage(self, fname):
+        ''' plot band percentage pie chart'''
+        band_percentage(self.df_adif, fname)
 
     @classmethod
     def _add_timestamp(cls, df):
         ''' add timestamp column to DataFrame '''
-        df['timestamp'] = pd.to_datetime(df['QSO_DATE'] + df['TIME_ON'],
-                                         format='%Y%m%d%H%M%S')
+        df['timestamp'] = pd.to_datetime(
+            df['QSO_DATE'] + df['TIME_ON'], format='%Y%m%d%H%M%S')
         return df
 
     @classmethod
     def _parse_adif_record(cls, record):
         ''' parse adif record and return a dictionary '''
         fields = re.findall(r'<(.*?):(\d+)>([^<]*)', record)
-        d = {field[0].upper().strip(): field[2].strip() for field in fields}
+        d = {field[0].upper().strip(): field[2].upper().strip()
+             for field in fields}
         return d
 
     @property
