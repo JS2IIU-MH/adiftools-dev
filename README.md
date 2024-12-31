@@ -9,7 +9,7 @@
 
 | Item | Description |
 | --- | --- |
-| Testing | ![](https://byob.yarr.is/JS2IIU-MH/adiftools-dev/passing_lints) |
+| Testing | ![](https://byob.yarr.is/JS2IIU-MH/adiftools-dev/passing_lints) ![](https://byob.yarr.is/{your_github_account}/{your_repo}/passing_pytest) |
 | Package | |
 | Meta | [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](LICENSE) ![](https://byob.yarr.is/JS2IIU-MH/adiftools-dev/time1) |
 
