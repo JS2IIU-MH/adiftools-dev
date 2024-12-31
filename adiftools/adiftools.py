@@ -8,6 +8,7 @@ except ModuleNotFoundError:
     from errors import AdifParserError
 except ImportError:
     from errors import AdifParserError
+
 try:
     from adiftools.adifgraph import monthly_qso, band_percentage
 except ModuleNotFoundError:
@@ -74,19 +75,29 @@ class ADIFParser():
 
     def to_csv(self, fname):
         ''' save ADIF DataFrame to csv file '''
+        if len(self.df_adif) == 0:
+            raise AdifParserError('No records found in ADIF file')
         self.df_adif.to_csv(fname, index=False)
 
     def plot_monthly(self, fname):
         ''' plot monthly QSO bar chart'''
+        if len(self.df_adif) == 0:
+            raise AdifParserError('No records found in ADIF file')
         monthly_qso(self.df_adif, fname)
 
     def plot_band_percentage(self, fname):
         ''' plot band percentage pie chart'''
+        if len(self.df_adif) == 0:
+            raise AdifParserError('No records found in ADIF file')
         band_percentage(self.df_adif, fname)
 
     @classmethod
     def _add_timestamp(cls, df):
         ''' add timestamp column to DataFrame '''
+        if 'QSO_DATE' not in df.columns or 'TIME_ON' not in df.columns:
+            raise AdifParserError(
+                'QSO_DATE and TIME_ON columns not found in DataFrame')
+
         df['timestamp'] = pd.to_datetime(
             df['QSO_DATE'] + df['TIME_ON'], format='%Y%m%d%H%M%S')
         return df
