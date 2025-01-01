@@ -1,6 +1,6 @@
 <picture align="center">
-    <source media="(prefers-color-scheme: dark)" secset="docs/adiftools_logo.svg">
-    <img alt="adiftools Logo" src="docs/adiftools_logo.svg" width=500>
+    <source media="(prefers-color-scheme: dark)" secset="https://js2iiu.com/wp-content/uploads/2024/12/adiftools_logo.png">
+    <img alt="adiftools Logo" src="https://js2iiu.com/wp-content/uploads/2024/12/adiftools_logo.png" width=500>
 </picture>
 
 ----------------------
@@ -47,7 +47,7 @@
   - Returns:
     - `None`
   
-    <img src="docs/monthly_qso_aa.png" width=600>
+    <img src="https://js2iiu.com/wp-content/uploads/2024/12/monthly_qso_aa.png" width=600>
 
 - **Band percentage plot**: generate pie plot to show QSO-Band percentage
   - Call signature:
