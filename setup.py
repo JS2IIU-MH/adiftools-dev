@@ -13,7 +13,7 @@ setup(
     url='https://github.com/JS2IIU-MH/adiftools-dev',
     download_url='https://github.com/JS2IIU-MH/adiftools-dev',
     packages=find_packages(include=['adiftools', 'adiftools.*'], exclude=['test/']),
-#    package_dir = {"": "adiftools"},
+    # package_dir = {"": "adiftools"},
     install_requires=open('requirements.txt').readlines(),
     keywords=['adif'],
     license='MIT',
