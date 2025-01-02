@@ -38,7 +38,7 @@
 - **ADIF data monthly plot**: generate manthly QSO plot
   - Call signature:
     ```python
-    adif_dataframe.plot_monthly(fname)
+    ADIFParser.plot_monthly(fname)
     ```
     Generate bar plot of monthly QSOs and save png or jpg file. 
   - Patameters:
@@ -52,7 +52,7 @@
 - **Band percentage plot**: generate pie plot to show QSO-Band percentage
   - Call signature:
     ```python
-    adif_dataframe.plot_band_percentage(fname)
+    ADIFParser.plot_band_percentage(fname)
     ```
     Generate pie plot of QSO-band counts and save png or jpg file. 
   - Patameters:
@@ -61,7 +61,7 @@
   - Returns:
     - `None`
 
-    <img src="docs/percentage_band.png" width=500>
+    <img src="https://js2iiu.com/wp-content/uploads/2025/01/percentage_band.png" width=500>
 
 
 ## Install
@@ -70,6 +70,24 @@ Binary installers for the latest released version will be available at the [Pyth
 **NOT WORKING AT THIS MOMENT**
 ```sh
 pip install adiftools
+```
+
+### testing version early access
+For detail, please see TestPyPI website: [adiftools · TestPyPI](https://test.pypi.org/project/adiftools/0.0.3/)
+
+```sh
+pip install -i https://test.pypi.org/simple/ adiftools==0.0.3
+```
+
+## Quick Start
+Example:
+```python
+import adiftools.adiftools as adiftools
+
+adi = adiftools.ADIFParser()
+
+df_adi = adi.read_adi('sample.adi') # Use your own adi file
+print(df)
 ```
 
 ## Dependencies
