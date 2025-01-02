@@ -57,12 +57,7 @@ def band_percentage(df, fname):
 
 
 def main():
-    from adiftools import ADIFParser
-    file_path = 'tests/sample_large.adi'
-    parser = ADIFParser()
-    df = parser.read_adi(file_path)
-    # monthly_qso(df, 'tests/monthly_qso_aa.png')
-    band_percentage(df, 'tests/percentage_band.png')
+    pass
 
 
 if __name__ == '__main__':

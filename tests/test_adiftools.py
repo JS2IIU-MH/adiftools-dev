@@ -21,6 +21,10 @@ def test_plot_monthly():
     assert True
 
 
+def test_plot_band_percentage():
+    at.plot_band_percentage('tests/percentage_band_test.png')
+    assert True
+
 def test_number_of_records():
     at = adiftools.ADIFParser()
     file_path = 'tests/sample.adi'
