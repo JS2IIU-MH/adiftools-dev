@@ -1,1 +1,1 @@
-__all__ = ['adiftools', 'adifgraph']
+__all__ = ['adiftools', 'adifgraph', 'gridlocator']
