@@ -2,12 +2,14 @@ import pytest
 
 from adiftools import adiftools
 
+
 @pytest.fixture
 def prep_instance():
     at = adiftools.ADIFParser()
     file_path = 'tests/sample.adi'
     _ = at.read_adi(file_path)
     return at
+
 
 @pytest.fixture
 def prep_data():
