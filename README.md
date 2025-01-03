@@ -63,6 +63,16 @@
 
     <img src="https://js2iiu.com/wp-content/uploads/2025/01/percentage_band.png" width=500>
 
+- **Grid Locator utilities**
+  - Calcurate geographic coodination from GL
+    - Call signature
+      ```python
+      adiftools.gl2latlon(gridlocator)
+      ```
+    - Parameter:
+      - `gridlocator`: str of gridlocator. 4 or 6 digits, regardless upper case or lower case. 
+    - Returns:
+      - `(latitude, longitude)`: tuple of latitude and longitude in decimal degree unit (DD/DEG format)
 
 ## Install
 Binary installers for the latest released version will be available at the [Python Package Index (PyPI)](https://pypi.org/) soon.
@@ -79,7 +89,7 @@ For detail, please see TestPyPI website: [adiftools · TestPyPI](https://test.py
 pip install -i https://test.pypi.org/simple/ adiftools==0.0.3
 ```
 
-## Quick Start
+## Getting Started
 Example:
 ```python
 import adiftools.adiftools as adiftools
