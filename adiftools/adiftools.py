@@ -125,6 +125,7 @@ class ADIFParser():
     def number_of_records(self):
         return self._number_of_records
 
+
 def gl2latlon(gridlocator):
     ''' convert grid locator to latitude and longitude in degrees '''
     lat, lon = gl_to_latlon(gridlocator)
