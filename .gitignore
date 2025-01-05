@@ -177,3 +177,4 @@ mytest.py
 .DS_store
 tests/sample_large.adi
 tests/*.png
+dist_history/
