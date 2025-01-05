@@ -73,20 +73,21 @@
       - `gridlocator`: str of gridlocator. 4 or 6 digits, regardless upper case or lower case. 
     - Returns:
       - `(latitude, longitude)`: tuple of latitude and longitude in decimal degree unit (DD/DEG format)
+  - Reference
+    - [Edmund T. Tyson, N5JTY, Conversion Between Geodetic and Grid Locator Systems, QST January 1989, pp. 29-30, 43](http://radio-amador.net/pipermail/cluster/attachments/20120105/3611b154/conversion_geodetic_grid.pdf)
 
 ## Install
-Binary installers for the latest released version will be available at the [Python Package Index (PyPI)](https://pypi.org/) soon.
+Binary installers for the latest released version is available via PyPI: [adiftools · PyPI](https://pypi.org/project/adiftools/).
 
-**NOT WORKING AT THIS MOMENT**
 ```sh
 pip install adiftools
 ```
 
-### testing version early access
-For detail, please see TestPyPI website: [adiftools · TestPyPI](https://test.pypi.org/project/adiftools/0.0.3/)
+### Testing version
+For detail, please see TestPyPI website: [adiftools · TestPyPI](https://test.pypi.org/project/adiftools/0.0.5/)
 
 ```sh
-pip install -i https://test.pypi.org/simple/ adiftools==0.0.3
+pip install -i https://test.pypi.org/simple/ adiftools==0.0.5
 ```
 
 ## Getting Started
