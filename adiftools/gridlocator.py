@@ -64,8 +64,52 @@ def gl_to_latlon(gridlocator):
     return (lat, lon)
 
 
+def latlon_to_gl(latitude, longitude):
+
+    if latitude < -90 or latitude > 90:
+        raise ValueError('latitude over range of value.')
+    if longitude < -180 or longitude > 180:
+        raise ValueError('longitude over range of value.')
+
+    gl = []
+    str_gl = ''
+
+    # first digit
+    idx = int((180 + (longitude // 20 * 20)) / 20)
+    tmp_lon1 = -180 + idx * 20
+    gl.append(chr(idx + ord('A')))
+
+    # second digit
+    idx = int((90 + (latitude // 10 * 10)) / 10)
+    tmp_lat1 = -90 + idx * 10
+    gl.append(chr(idx + ord('A')))
+
+    # third digit
+    idx = int((longitude - tmp_lon1) // 2)
+    tmp_lon2 = (longitude - tmp_lon1) // 2 * 2 + tmp_lon1
+    gl.append(str(idx))
+
+    # fourth digit
+    idx = int(latitude - (latitude // 10 * 10) // 1)
+    tmp_lat2 = (latitude - tmp_lat1) // 1 * 1 + tmp_lat1
+    gl.append(str(idx))
+
+    # fifth digit
+    idx = int((longitude - tmp_lon2) // (2/24))
+    gl.append(chr(idx + ord('a')))
+
+    # sixth digit
+    idx = int((latitude - tmp_lat2) // (1/24))
+    gl.append(chr(idx + ord('a')))
+
+    for s in gl:
+        str_gl += s
+
+    return str_gl
+
+
 def main():
-    print(gl_to_latlon('PM85kg'))
+    pass
 
 
 if __name__ == '__main__':
