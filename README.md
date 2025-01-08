@@ -65,7 +65,7 @@
     <img src="https://js2iiu.com/wp-content/uploads/2025/01/percentage_band.png" width=500>
 
 - **Grid Locator utilities**
-  - Calcurate geographic coodination from GL
+  - Calculate geographic coodination from GL
     - Call signature
       ```python
       adiftools.gl2latlon(gridlocator)
@@ -74,6 +74,16 @@
       - `gridlocator`: str of gridlocator. 4 or 6 digits, regardless upper case or lower case. 
     - Returns:
       - `(latitude, longitude)`: tuple of latitude and longitude in decimal degree unit (DD/DEG format)
+
+  - Calculate grid locators from latitude and longitude
+    - Call signature
+      ```python
+      adiftools.latlon2gl(latitude, longitude)
+      ```
+    - Parameters:
+      - `latitude` in decimal degree unit
+      - `longitude` in decimal degree unit
+
   - Reference
     - [Edmund T. Tyson, N5JTY, Conversion Between Geodetic and Grid Locator Systems, QST January 1989, pp. 29-30, 43](http://radio-amador.net/pipermail/cluster/attachments/20120105/3611b154/conversion_geodetic_grid.pdf)
 

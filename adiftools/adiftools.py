@@ -17,11 +17,11 @@ except ImportError:
     from adifgraph import monthly_qso, band_percentage
 
 try:
-    from adiftools.gridlocator import gl_to_latlon
+    from adiftools.gridlocator import gl_to_latlon, latlon_to_gl
 except ModuleNotFoundError:
-    from gridlocator import gl_to_latlon
+    from gridlocator import gl_to_latlon, latlon_to_gl
 except ImportError:
-    from gridlocator import gl_to_latlon
+    from gridlocator import gl_to_latlon, latlon_to_gl
 
 
 class ADIFParser():
@@ -130,6 +130,12 @@ def gl2latlon(gridlocator):
     ''' convert grid locator to latitude and longitude in degrees '''
     lat, lon = gl_to_latlon(gridlocator)
     return (lat, lon)
+
+
+def latlon2gl(latitude, longitude):
+    ''' convert lat/lon to grid locator '''
+    gridlocator = latlon_to_gl(latitude, longitude)
+    return gridlocator
 
 
 def main():
