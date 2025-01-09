@@ -86,7 +86,7 @@ class ADIFParser():
             raise AdifParserError('No records found in ADIF file')
         self.df_adif.to_csv(fname, index=False)
 
-    ## Plot related methods
+    # Plot related methods
     def plot_monthly(self, fname):
         ''' plot monthly QSO bar chart'''
         if len(self.df_adif) == 0:
