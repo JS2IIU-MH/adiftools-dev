@@ -57,11 +57,20 @@ def test_gl_to_latlon(data_in, expected_data):
         pytest.param('QN01js', (41.7757043, 140.8158222)),
         pytest.param('PM74rs', (34.7861612, 135.4380483)),
         pytest.param('PM63it', (33.8276948, 132.7003773)),
+        pytest.param('QN01', (41.7757043, 140.8158222, True)),
+        pytest.param('PM74', (34.7861612, 135.4380483, True)),
+        pytest.param('PM63', (33.8276948, 132.7003773, True)),
+        pytest.param('QN01js', (41.7757043, 140.8158222, False)),
+        pytest.param('PM74rs', (34.7861612, 135.4380483, False)),
+        pytest.param('PM63it', (33.8276948, 132.7003773, False)),
     ]
 )
 def test_latlon_to_gl(data_in, expected_data):
     ''' test latitude and longitude to grid locator '''
 
-    gridlocator = gl.latlon_to_gl(data_in[0], data_in[1])
+    if len(data_in) == 3:
+        gridlocator = gl.latlon_to_gl(data_in[0], data_in[1], data_in[2])
+    else:
+        gridlocator = gl.latlon_to_gl(data_in[0], data_in[1])
 
     assert gridlocator == expected_data

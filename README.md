@@ -78,11 +78,12 @@
   - Calculate grid locators from latitude and longitude
     - Call signature
       ```python
-      adiftools.latlon2gl(latitude, longitude)
+      adiftools.latlon2gl(latitude, longitude, fourdigit=False)
       ```
     - Parameters:
       - `latitude` in decimal degree unit
       - `longitude` in decimal degree unit
+      - `fourdigit` if True, returns 4-digit grid square
 
   - Reference
     - [Edmund T. Tyson, N5JTY, Conversion Between Geodetic and Grid Locator Systems, QST January 1989, pp. 29-30, 43](http://radio-amador.net/pipermail/cluster/attachments/20120105/3611b154/conversion_geodetic_grid.pdf)

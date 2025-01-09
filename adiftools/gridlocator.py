@@ -64,7 +64,16 @@ def gl_to_latlon(gridlocator):
     return (lat, lon)
 
 
-def latlon_to_gl(latitude, longitude):
+def latlon_to_gl(latitude, longitude, fourdigit=False):
+    """Converts latitude and longitude to a grid locator.
+
+    Args:
+        Latitude and Longitude in degrees.
+        `fourdigit`: if True, returns 4-digit grid square
+
+    Returns:
+        gridlocator (str): Grid locator.
+    """
 
     if latitude < -90 or latitude > 90:
         raise ValueError('latitude over range of value.')
@@ -94,13 +103,14 @@ def latlon_to_gl(latitude, longitude):
     tmp_lat2 = (latitude - tmp_lat1) // 1 * 1 + tmp_lat1
     gl.append(str(idx))
 
-    # fifth digit
-    idx = int((longitude - tmp_lon2) // (2/24))
-    gl.append(chr(idx + ord('a')))
+    if not fourdigit:
+        # fifth digit
+        idx = int((longitude - tmp_lon2) // (2/24))
+        gl.append(chr(idx + ord('a')))
 
-    # sixth digit
-    idx = int((latitude - tmp_lat2) // (1/24))
-    gl.append(chr(idx + ord('a')))
+        # sixth digit
+        idx = int((latitude - tmp_lat2) // (1/24))
+        gl.append(chr(idx + ord('a')))
 
     for s in gl:
         str_gl += s

@@ -86,6 +86,7 @@ class ADIFParser():
             raise AdifParserError('No records found in ADIF file')
         self.df_adif.to_csv(fname, index=False)
 
+    ## Plot related methods
     def plot_monthly(self, fname):
         ''' plot monthly QSO bar chart'''
         if len(self.df_adif) == 0:
@@ -132,9 +133,13 @@ def gl2latlon(gridlocator):
     return (lat, lon)
 
 
-def latlon2gl(latitude, longitude):
+def latlon2gl(latitude, longitude, fourdigit=False):
     ''' convert lat/lon to grid locator '''
-    gridlocator = latlon_to_gl(latitude, longitude)
+    if fourdigit:
+        gridlocator = latlon_to_gl(latitude, longitude, fourdigit)
+    else:
+        gridlocator = latlon_to_gl(latitude, longitude)
+
     return gridlocator
 
 

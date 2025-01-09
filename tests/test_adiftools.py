@@ -79,4 +79,42 @@ def test_gl2latlon(data_in, expected_data):
             lon_min <= coordinates[1] <= lon_max)
 
 
+@pytest.mark.parametrize(
+    # variables
+    [
+        'expected_data',
+        'data_in',
+    ],
+    # values
+    [
+        # test cases
+        pytest.param('PM85kg', (35.2781423, 136.8735481)),
+        pytest.param('PM95pl', (35.4913535, 139.2841430)),
+        pytest.param('PM95vq', (35.6812362, 139.7671248)),
+        pytest.param('PM53fo', (33.5849988, 130.4490906)),
+        pytest.param('PL36te', (26.2001297, 127.6466452)),
+        pytest.param('QN00ir', (40.7354587, 140.6904126)),
+        pytest.param('QN02us', (42.7791317, 141.6866364)),
+        pytest.param('QN01js', (41.7757043, 140.8158222)),
+        pytest.param('PM74rs', (34.7861612, 135.4380483)),
+        pytest.param('PM63it', (33.8276948, 132.7003773)),
+        pytest.param('QN01', (41.7757043, 140.8158222, True)),
+        pytest.param('PM74', (34.7861612, 135.4380483, True)),
+        pytest.param('PM63', (33.8276948, 132.7003773, True)),
+        pytest.param('QN01js', (41.7757043, 140.8158222, False)),
+        pytest.param('PM74rs', (34.7861612, 135.4380483, False)),
+        pytest.param('PM63it', (33.8276948, 132.7003773, False)),
+    ]
+)
+def test_latlon2gl(data_in, expected_data):
+    ''' test latitude and longitude to grid locator '''
+
+    if len(data_in) == 3:
+        gridlocator = adiftools.latlon2gl(data_in[0], data_in[1], data_in[2])
+    else:
+        gridlocator = adiftools.latlon2gl(data_in[0], data_in[1])
+
+    assert gridlocator == expected_data
+
+
 # TODO: use test fixture to create a temporary file
