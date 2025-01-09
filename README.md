@@ -96,6 +96,8 @@ pip install adiftools
 ```
 
 ### Testing version
+**We have decided not to update adiftools on the TestPyPI site anymore.**
+
 For detail, please see TestPyPI website: [adiftools · TestPyPI](https://test.pypi.org/project/adiftools/0.0.5/)
 
 ```sh
@@ -120,3 +122,6 @@ print(df)
 
 ## Licence
 [MIT](LICENSE)
+
+## 日本語での情報提供
+- [adiftools | アマチュア無線局JS2IIU](https://js2iiu.com/adiftools/)
