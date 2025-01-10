@@ -23,6 +23,11 @@ except ModuleNotFoundError:
 except ImportError:
     from gridlocator import gl_to_latlon, latlon_to_gl
 
+try:
+    from adiftools.callsign import is_ja_call
+except ModuleNotFoundError or ImportError:
+    from callsign import is_ja_call
+
 
 class ADIFParser():
     ''' ADIFParser class '''
@@ -86,19 +91,6 @@ class ADIFParser():
             raise AdifParserError('No records found in ADIF file')
         self.df_adif.to_csv(fname, index=False)
 
-    # Plot related methods
-    def plot_monthly(self, fname):
-        ''' plot monthly QSO bar chart'''
-        if len(self.df_adif) == 0:
-            raise AdifParserError('No records found in ADIF file')
-        monthly_qso(self.df_adif, fname)
-
-    def plot_band_percentage(self, fname):
-        ''' plot band percentage pie chart'''
-        if len(self.df_adif) == 0:
-            raise AdifParserError('No records found in ADIF file')
-        band_percentage(self.df_adif, fname)
-
     @classmethod
     def _add_timestamp(cls, df):
         ''' add timestamp column to DataFrame '''
@@ -126,7 +118,21 @@ class ADIFParser():
     def number_of_records(self):
         return self._number_of_records
 
+    # Plot related methods
+    def plot_monthly(self, fname):
+        ''' plot monthly QSO bar chart'''
+        if len(self.df_adif) == 0:
+            raise AdifParserError('No records found in ADIF file')
+        monthly_qso(self.df_adif, fname)
 
+    def plot_band_percentage(self, fname):
+        ''' plot band percentage pie chart'''
+        if len(self.df_adif) == 0:
+            raise AdifParserError('No records found in ADIF file')
+        band_percentage(self.df_adif, fname)
+
+
+# grid locator
 def gl2latlon(gridlocator):
     ''' convert grid locator to latitude and longitude in degrees '''
     lat, lon = gl_to_latlon(gridlocator)
@@ -141,6 +147,11 @@ def latlon2gl(latitude, longitude, fourdigit=False):
         gridlocator = latlon_to_gl(latitude, longitude)
 
     return gridlocator
+
+
+# call sign
+def is_ja(call_sign):
+    return is_ja_call(call_sign)
 
 
 def main():

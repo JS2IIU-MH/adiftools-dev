@@ -88,6 +88,17 @@
   - Reference
     - [Edmund T. Tyson, N5JTY, Conversion Between Geodetic and Grid Locator Systems, QST January 1989, pp. 29-30, 43](http://radio-amador.net/pipermail/cluster/attachments/20120105/3611b154/conversion_geodetic_grid.pdf)
 
+- **Call Sign Utility**
+  - Check JA call sign
+    - Call signature
+      ```python
+      adiftools.is_ja(call_sign)
+      ```
+    - Parameter:
+      - `call_sign` call sign as string
+    - Returns:
+      - `True`: JA call, `False`: other
+
 ## Install
 Binary installers for the latest released version is available via PyPI: [adiftools · PyPI](https://pypi.org/project/adiftools/).
 

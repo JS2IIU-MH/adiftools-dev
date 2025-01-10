@@ -178,3 +178,4 @@ mytest.py
 tests/sample_large.adi
 tests/*.png
 dist_history/
+*.xlsx
