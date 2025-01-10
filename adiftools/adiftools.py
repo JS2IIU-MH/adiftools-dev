@@ -4,23 +4,17 @@ import pandas as pd
 
 try:
     from adiftools.errors import AdifParserError
-except ModuleNotFoundError:
-    from errors import AdifParserError
-except ImportError:
+except ModuleNotFoundError or ImportError:
     from errors import AdifParserError
 
 try:
     from adiftools.adifgraph import monthly_qso, band_percentage
-except ModuleNotFoundError:
-    from adifgraph import monthly_qso, band_percentage
-except ImportError:
+except ModuleNotFoundError or ImportError:
     from adifgraph import monthly_qso, band_percentage
 
 try:
     from adiftools.gridlocator import gl_to_latlon, latlon_to_gl
-except ModuleNotFoundError:
-    from gridlocator import gl_to_latlon, latlon_to_gl
-except ImportError:
+except ModuleNotFoundError or ImportError:
     from gridlocator import gl_to_latlon, latlon_to_gl
 
 try:
