@@ -90,7 +90,7 @@
 
   - Calculate distance from two places' latitude and longitude
     - Call signature
-      ``python
+      ```python
       adiftools.get_dist(lat1, lon1, lat2, lon2)
       ```
     - Parameters:
