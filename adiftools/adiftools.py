@@ -2,6 +2,7 @@ import re
 
 import pandas as pd
 
+
 try:
     from adiftools.errors import AdifParserError
 except ModuleNotFoundError or ImportError:
@@ -142,8 +143,10 @@ def latlon2gl(latitude, longitude, fourdigit=False):
 
     return gridlocator
 
+
 def get_dist(lat1, lon1, lat2, lo2):
     return get_distance(lat1, lon1, lat2, lo2)
+
 
 # call sign
 def is_ja(call_sign):
