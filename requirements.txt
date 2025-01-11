@@ -5,3 +5,6 @@ python-dateutil
 pytz
 six
 tzdata
+geographiclib
+iniconfig
+pluggy

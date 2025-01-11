@@ -13,9 +13,9 @@ except ModuleNotFoundError or ImportError:
     from adifgraph import monthly_qso, band_percentage
 
 try:
-    from adiftools.gridlocator import gl_to_latlon, latlon_to_gl
+    from adiftools.gridlocator import gl_to_latlon, latlon_to_gl, get_distance
 except ModuleNotFoundError or ImportError:
-    from gridlocator import gl_to_latlon, latlon_to_gl
+    from gridlocator import gl_to_latlon, latlon_to_gl, get_distance
 
 try:
     from adiftools.callsign import is_ja_call
@@ -142,6 +142,8 @@ def latlon2gl(latitude, longitude, fourdigit=False):
 
     return gridlocator
 
+def get_dist(lat1, lon1, lat2, lo2):
+    return get_distance(lat1, lon1, lat2, lo2)
 
 # call sign
 def is_ja(call_sign):

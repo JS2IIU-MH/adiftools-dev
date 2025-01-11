@@ -74,3 +74,38 @@ def test_latlon_to_gl(data_in, expected_data):
         gridlocator = gl.latlon_to_gl(data_in[0], data_in[1])
 
     assert gridlocator == expected_data
+
+
+@pytest.mark.parametrize(
+    "points, expected",
+    [
+        ([34.8584, 136.8054, 35.255, 136.9238], 45305.76999847593),
+        ([34.8584, 136.8054, 42.7752, 141.6923], 975524.2589462004),
+        ([34.8584, 136.8054, 42.2089616, -83.3532049], 10544713.19816745),
+    ]
+)
+def test_get_distance(points, expected):
+
+    TOLERANCE = 0.15
+
+    exp_max = expected + TOLERANCE
+    exp_min = expected - TOLERANCE
+
+    res = gl.get_distance(points[0], points[1], points[2], points[3])
+
+    assert exp_min < res < exp_max
+
+
+@pytest.mark.parametrize(
+    "points, expected",
+    [
+        ([134.8584, 136.8054, 35.255, 136.9238], pytest.raises(ValueError)),
+        ([34.8584, 236.8054, 42.7752, 141.6923], pytest.raises(ValueError)),
+        ([34.8584, 136.8054, 142.7752, 141.6923], pytest.raises(ValueError)),
+        ([34.8584, 136.8054, 42.7752, 241.6923], pytest.raises(ValueError)),
+        
+    ]
+)
+def test_error_getdistance(points, expected):
+    with expected as e:
+        assert gl.get_distance(points[0], points[1], points[2], points[3]) == e

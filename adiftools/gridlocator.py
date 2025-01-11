@@ -1,3 +1,4 @@
+from geographiclib.geodesic import Geodesic
 
 def _alpha_to_lonlat(alpha):
     """Converts an alpha character to longitude and latitude coefficients.
@@ -117,6 +118,15 @@ def latlon_to_gl(latitude, longitude, fourdigit=False):
 
     return str_gl
 
+
+def get_distance(p1_lat, p1_lon, p2_lat, p2_lon):
+    if not ((-90 < p1_lat < 90) and (-90 < p2_lat < 90) and
+            (-180 < p1_lon < 180) and (-180 < p2_lon < 180)):
+        raise ValueError('make sure latitude or longitude value is in range')
+    
+    res = Geodesic.WGS84.Inverse(p1_lat, p1_lon, p2_lat, p2_lon)
+
+    return res['s12']
 
 def main():
     pass
