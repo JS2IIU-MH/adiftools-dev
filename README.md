@@ -88,6 +88,21 @@
   - Reference
     - [Edmund T. Tyson, N5JTY, Conversion Between Geodetic and Grid Locator Systems, QST January 1989, pp. 29-30, 43](http://radio-amador.net/pipermail/cluster/attachments/20120105/3611b154/conversion_geodetic_grid.pdf)
 
+  - Calculate distance from two places' latitude and longitude
+    - Call signature
+      ``python
+      adiftools.get_dist(lat1, lon1, lat2, lon2)
+      ```
+    - Parameters:
+      - `lat1` – latitude of the first point in degrees
+      - `lon1` – longitude of the first point in degrees
+      - `lat2` – latitude of the second point in degrees
+      - `lon2` – longitude of the second point in degrees
+    - Returns:
+      - the distance from the first point to the second in meters
+    - Reference
+      - [GeographicLib API — geographiclib 2.0 documentation](https://geographiclib.sourceforge.io/Python/doc/code.html#)
+
 - **Call Sign Utility**
   - Check JA call sign
     - Call signature
