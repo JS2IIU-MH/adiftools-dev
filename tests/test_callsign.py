@@ -31,3 +31,20 @@ def test_is_ja_call(callsign, expected):
 def test_error_is_ja_call(callsign, expected):
     with expected as e:
         assert cs.is_ja_call(callsign) == e
+
+
+@pytest.mark.parametrize(
+    "callsign, expected",
+    [
+        ("JS2IIU", 2),
+        ("7N4AAA", 1),
+        ("JA1RL", 1),
+        ("8J1RL", 1),
+        ("JR6AAA", 6),
+        ("JA0AAA", 0),
+        ("JAAAAA", None),
+        ("", None),
+    ]
+)
+def test_get_area(callsign, expected):
+    assert expected == cs.get_area(callsign)

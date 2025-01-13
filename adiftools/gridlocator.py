@@ -1,5 +1,6 @@
 from geographiclib.geodesic import Geodesic
 
+
 def _alpha_to_lonlat(alpha):
     """Converts an alpha character to longitude and latitude coefficients.
 

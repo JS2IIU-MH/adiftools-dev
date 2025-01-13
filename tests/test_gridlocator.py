@@ -103,7 +103,6 @@ def test_get_distance(points, expected):
         ([34.8584, 236.8054, 42.7752, 141.6923], pytest.raises(ValueError)),
         ([34.8584, 136.8054, 142.7752, 141.6923], pytest.raises(ValueError)),
         ([34.8584, 136.8054, 42.7752, 241.6923], pytest.raises(ValueError)),
-        
     ]
 )
 def test_error_getdistance(points, expected):
