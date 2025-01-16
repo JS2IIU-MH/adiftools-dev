@@ -19,9 +19,9 @@ except ModuleNotFoundError or ImportError:
     from gridlocator import gl_to_latlon, latlon_to_gl, get_distance
 
 try:
-    from adiftools.callsign import is_ja_call
+    from adiftools.callsign import is_ja_call, get_area_num
 except ModuleNotFoundError or ImportError:
-    from callsign import is_ja_call
+    from callsign import is_ja_call, get_area_num
 
 
 class ADIFParser():
@@ -151,6 +151,10 @@ def get_dist(lat1, lon1, lat2, lo2):
 # call sign
 def is_ja(call_sign):
     return is_ja_call(call_sign)
+
+
+def get_area(call_sign):
+    return get_area_num(call_sign)
 
 
 def main():

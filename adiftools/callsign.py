@@ -15,7 +15,7 @@ def is_ja_call(call_sign: str):
     return bool(match)
 
 
-def get_area(text: str) -> int | None:
+def get_area_num(text: str) -> int | None:
     """
     receives a string and returns a number based on specific conditions
 

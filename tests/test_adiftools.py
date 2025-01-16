@@ -117,4 +117,51 @@ def test_latlon2gl(data_in, expected_data):
     assert gridlocator == expected_data
 
 
+@pytest.mark.parametrize(
+    "callsign, expected",
+    [
+        ("JA1ABC", True),
+        ("7K1XYZ", True),
+        ("8L1DEF", True),
+        ("JTA1ABC", False),
+        ("7Z1XYZ", False),
+        ("9J1DEF", False),
+    ],
+)
+def test_is_ja(callsign, expected):
+    assert adiftools.is_ja(callsign) == expected
+
+
+@pytest.mark.parametrize(
+    "callsign, expected",
+    [
+        ("", pytest.raises(ValueError)),
+        ("JA", pytest.raises(ValueError)),
+        ("7", pytest.raises(ValueError)),
+        (7, pytest.raises(TypeError)),
+
+    ],
+)
+def test_error_is_ja(callsign, expected):
+    with expected as e:
+        assert adiftools.is_ja(callsign) == e
+
+
+@pytest.mark.parametrize(
+    "callsign, expected",
+    [
+        ("JS2IIU", 2),
+        ("7N4AAA", 1),
+        ("JA1RL", 1),
+        ("8J1RL", 1),
+        ("JR6AAA", 6),
+        ("JA0AAA", 0),
+        ("JAAAAA", None),
+        ("", None),
+    ]
+)
+def test_get_area_num(callsign, expected):
+    assert expected == adiftools.get_area(callsign)
+
+
 # TODO: use test fixture to create a temporary file

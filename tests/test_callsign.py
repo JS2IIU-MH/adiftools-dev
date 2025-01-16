@@ -46,5 +46,5 @@ def test_error_is_ja_call(callsign, expected):
         ("", None),
     ]
 )
-def test_get_area(callsign, expected):
-    assert expected == cs.get_area(callsign)
+def test_get_area_num(callsign, expected):
+    assert expected == cs.get_area_num(callsign)
