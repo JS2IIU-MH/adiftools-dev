@@ -110,9 +110,19 @@
       adiftools.is_ja(call_sign)
       ```
     - Parameter:
-      - `call_sign` call sign as string
+      - `call_sign` call sign in string
     - Returns:
       - `True`: JA call, `False`: other
+  - Check Area
+    - Call signature
+      ```python
+      adiftools.get_area(call_sign)
+      ```
+    - Parameter:
+      - `call_sign` call sign in string
+    - Returns:
+      - `number`: area number, `None`: n/a 
+
 
 ## Install
 Binary installers for the latest released version is available via PyPI: [adiftools · PyPI](https://pypi.org/project/adiftools/).
