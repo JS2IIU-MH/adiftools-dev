@@ -9,7 +9,7 @@ except ModuleNotFoundError or ImportError:
 
 def monthly_qso(df, fname):
     ''' plot monthly QSO '''
-    if len(df) > 0:
+    if len(df) < 0:
         raise AdifParserError('Empty adif data')
 
     df['QSO_DATE'] = pd.to_datetime(df['QSO_DATE'])
@@ -50,7 +50,7 @@ def monthly_qso(df, fname):
 def band_percentage(df, fname):
     ''' generate circle graph for band percentage '''
     # caclulate mode percentage
-    if len(df) > 0:
+    if len(df) < 0:
         raise AdifParserError('Empty adif data')
 
     if 'BAND' in df.columns:
