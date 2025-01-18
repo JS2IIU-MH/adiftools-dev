@@ -118,6 +118,26 @@ def test_latlon2gl(data_in, expected_data):
 
 
 @pytest.mark.parametrize(
+    "points, expected",
+    [
+        ([34.8584, 136.8054, 35.255, 136.9238], 45305.76999847593),
+        ([34.8584, 136.8054, 42.7752, 141.6923], 975524.2589462004),
+        ([34.8584, 136.8054, 42.2089616, -83.3532049], 10544713.19816745),
+    ]
+)
+def test_get_dist(points, expected):
+
+    TOLERANCE = 0.15
+
+    exp_max = expected + TOLERANCE
+    exp_min = expected - TOLERANCE
+
+    res = adiftools.get_dist(points[0], points[1], points[2], points[3])
+
+    assert exp_min < res < exp_max
+
+
+@pytest.mark.parametrize(
     "callsign, expected",
     [
         ("JA1ABC", True),

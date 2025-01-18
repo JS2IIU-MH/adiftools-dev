@@ -1,9 +1,17 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
+try:
+    from adiftools.errors import AdifParserError
+except ModuleNotFoundError or ImportError:
+    from errors import AdifParserError
+
 
 def monthly_qso(df, fname):
     ''' plot monthly QSO '''
+    if len(df) > 0:
+        raise AdifParserError('Empty adif data')
+
     df['QSO_DATE'] = pd.to_datetime(df['QSO_DATE'])
     df['QSO_DATE'] = df['QSO_DATE'].dt.to_period('M')
     df = df.groupby('QSO_DATE').size().reset_index(name='counts')
@@ -42,6 +50,9 @@ def monthly_qso(df, fname):
 def band_percentage(df, fname):
     ''' generate circle graph for band percentage '''
     # caclulate mode percentage
+    if len(df) > 0:
+        raise AdifParserError('Empty adif data')
+
     if 'BAND' in df.columns:
         mode_counts = df['BAND'].value_counts()
     else:

@@ -113,6 +113,13 @@ class ADIFParser():
     def number_of_records(self):
         return self._number_of_records
 
+    @property
+    def is_loaded(self):
+        if len(self.df_adif) > 0:
+            return True
+        else:
+            return False
+
     # Plot related methods
     def plot_monthly(self, fname):
         ''' plot monthly QSO bar chart'''
