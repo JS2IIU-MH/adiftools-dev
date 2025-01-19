@@ -90,7 +90,7 @@ class ADIFParser():
         ''' output callsign in DataFrame to text file '''
         if len(self.df_adif) == 0:
             raise AdifParserError('No records found in ADIF file')
-        
+
         calls = set(self.df_adif['CALL'].to_list())
 
         with open(fname, 'w') as f:
