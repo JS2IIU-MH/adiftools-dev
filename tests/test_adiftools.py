@@ -1,4 +1,7 @@
 import pytest
+import tempfile
+from pathlib import Path
+from typing import Any, Generator
 
 from adiftools import adiftools
 
@@ -17,6 +20,16 @@ def prep_data():
     file_path = 'tests/sample.adi'
     df = at.read_adi(file_path)
     return df
+
+
+@pytest.fixture(scope='function')
+def txt_file() -> Generator[Path, Any, None]:
+    ''' csv tempfile '''
+    path = Path(tempfile.NamedTemporaryFile(suffix='.txt', delete=False).name)
+    yield path
+
+    # delete tempfile after test
+    path.unlink()
 
 
 def test_read_adi(prep_data):
@@ -41,6 +54,11 @@ def test_plot_band_percentage(prep_instance):
 
 def test_number_of_records(prep_instance):
     assert prep_instance.number_of_records == 126
+
+
+def test_call_to_txt(prep_instance, txt_file):
+    prep_instance.call_to_txt(txt_file)
+    assert True
 
 
 @pytest.mark.parametrize(

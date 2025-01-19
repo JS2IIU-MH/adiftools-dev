@@ -36,6 +36,19 @@
     - `enable_timestamp`: bool, default: `False`
       - If True, add row named ['timestamp'] to DataFrame which is generated from ADIF file. The row ['timestamp'] is `datetime64[ns]` type and based on rows `'QSO_DATE'` and `'TIME_ON'`.
 
+- **Generate Callsign file**
+  - Outputs call sign data without duplicates from data read from an ADIF file as a text file. The text file will contain one callsign per line.
+  - If the ADIF file has not been read, i.e., `read_adi()` has not been performed, it returns the error `AdifParserError`.
+  - Call signature:
+    ```python
+    ADIFParser.call_to_txt(filepath)
+    ```
+  - Parameter:
+    - `file_path`: str or path-like or binary file-like
+      - A path of output txt file
+  - Returns:
+    - `None`
+
 - **ADIF data monthly plot**: generate manthly QSO plot
   - Call signature:
     ```python
