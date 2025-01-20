@@ -1,1 +1,1 @@
-{"time1":{"label":"Updated at","status":"Mon Jan 20 11:05:59 UTC 2025","color":"4B0082"},"passing_lints":{"label":"flake8","status":"passing","color":"0088FF"},"passing_pytest":{"label":"pytest","status":"running or failed","color":"FFAA00"}}
+{"time1":{"label":"Updated at","status":"Mon Jan 20 11:05:59 UTC 2025","color":"4B0082"},"passing_lints":{"label":"flake8","status":"passing","color":"0088FF"},"passing_pytest":{"label":"pytest","status":"passing","color":"0088FF"}}
