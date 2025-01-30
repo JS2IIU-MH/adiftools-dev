@@ -141,6 +141,11 @@ This tool offers the capability to load all QSO data from an ADIF file into a Pa
 Note: `adiftools` is not support ADX file format at this moment.
 
 ## Install
+
+adiftools has been tested against Python 3.11, 3.12, and 3.13. It may work with Python 3 prior to 3.10, but we recommend using 3.11 or higher versions.
+
+It is recommended to create a virtual environment and install adiftools inside the virtual environment.
+
 Binary installers for the latest released version is available via PyPI: [adiftools · PyPI](https://pypi.org/project/adiftools/).
 
 ```sh
@@ -150,6 +155,11 @@ pip install adiftools
 If you are using an older version of adiftools, please use the following command to update it to the latest version.
 ```sh
 pip install -U adiftools
+```
+
+Unfortunately, if you no longer need adiftools, you can uninstall it with the following command.
+```sh
+pip uninstall adiftools
 ```
 
 ### Testing version
