@@ -18,6 +18,8 @@
 
 **adiftools** is a Python package that provides utilities for ADIF data which is used for the QSO logging file format.
 
+This tool offers the capability to load all QSO data from an ADIF file into a Pandas DataFrame. Additionally, it provides functionalities for graphing the loaded data, along with utility functions for Grid Locator-related latitude and longitude conversion and distance measurement.
+
 ## Main Features
 
 - **ADIF file parser**: read ADIF file and convert to Pandas DataFrame
@@ -145,6 +147,11 @@ Binary installers for the latest released version is available via PyPI: [adifto
 pip install adiftools
 ```
 
+If you are using an older version of adiftools, please use the following command to update it to the latest version.
+```sh
+pip install -U adiftools
+```
+
 ### Testing version
 **We have decided not to update adiftools on the TestPyPI site anymore.**
 
@@ -177,6 +184,7 @@ print(df)
 [MIT](LICENSE)
 
 ## 日本語での情報提供
+Information in Japanese is available on the following blogs. Information updates are prioritised on Github, and information updates on the following blogs are slightly delayed.
 - [adiftools | アマチュア無線局JS2IIU](https://js2iiu.com/adiftools/)
 
 TU de JS2IIU 73
