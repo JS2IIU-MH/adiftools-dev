@@ -7,7 +7,7 @@
 
 # adiftools: adif file utility tools for all amateur radio stations
 
-| Item | Description |
+| Item | Status |
 | :---: | --- |
 | Testing | ![](https://byob.yarr.is/JS2IIU-MH/adiftools-dev/passing_lints) ![](https://byob.yarr.is/JS2IIU-MH/adiftools-dev/passing_pytest) ![GitHub issue custom search in repo](https://img.shields.io/github/issues-search/JS2IIU-MH/adiftools-dev?query=is%3Aclosed&label=closed%20issue) |
 | Package | ![GitHub Release](https://img.shields.io/github/v/release/JS2IIU-MH/adiftools-dev) |
@@ -41,7 +41,7 @@
   - If the ADIF file has not been read, i.e., `read_adi()` has not been performed, it returns the error `AdifParserError`.
   - Call signature:
     ```python
-    ADIFParser.call_to_txt(filepath)
+    ADIFParser.call_to_txt(file_path)
     ```
   - Parameter:
     - `file_path`: str or path-like or binary file-like
@@ -52,11 +52,11 @@
 - **ADIF data monthly plot**: generate manthly QSO plot
   - Call signature:
     ```python
-    ADIFParser.plot_monthly(fname)
+    ADIFParser.plot_monthly(file_path)
     ```
     Generate bar plot of monthly QSOs and save png or jpg file. 
   - Patameters:
-    - `fname`: str or path-like or binary file-like
+    - `file_path`: str or path-like or binary file-like
       - A path, or a Python file-like object of plot's PNG or JPG file
   - Returns:
     - `None`
@@ -66,11 +66,11 @@
 - **Band percentage plot**: generate pie plot to show QSO-Band percentage
   - Call signature:
     ```python
-    ADIFParser.plot_band_percentage(fname)
+    ADIFParser.plot_band_percentage(file_path)
     ```
     Generate pie plot of QSO-band counts and save png or jpg file. 
   - Patameters:
-    - `fname`: str or path-like or binary file-like
+    - `file_path`: str or path-like or binary file-like
       - A path, or a Python file-like object of plot's PNG or JPG file
   - Returns:
     - `None`
@@ -136,6 +136,7 @@
     - Returns:
       - `number`: area number, `None`: n/a 
 
+Note: `adiftools` is not support ADX file format at this moment.
 
 ## Install
 Binary installers for the latest released version is available via PyPI: [adiftools · PyPI](https://pypi.org/project/adiftools/).
@@ -154,6 +155,8 @@ pip install -i https://test.pypi.org/simple/ adiftools==0.0.5
 ```
 
 ## Getting Started
+The first step in utilizing adiftools is to load an ADIF file; files that follow the ADIF standard can be loaded. After loading an adif file, you can perform graphing and other operations. Please refer to this page for ADIF standard. [The Independent ADIF Site](https://www.adif.org/)
+
 Example:
 ```python
 import adiftools.adiftools as adiftools
@@ -175,3 +178,5 @@ print(df)
 
 ## 日本語での情報提供
 - [adiftools | アマチュア無線局JS2IIU](https://js2iiu.com/adiftools/)
+
+TU de JS2IIU 73

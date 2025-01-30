@@ -80,20 +80,20 @@ class ADIFParser():
 
         return df
 
-    def to_csv(self, fname):
+    def to_csv(self, file_path):
         ''' save ADIF DataFrame to csv file '''
         if len(self.df_adif) == 0:
             raise AdifParserError('No records found in ADIF file')
-        self.df_adif.to_csv(fname, index=False)
+        self.df_adif.to_csv(file_path, index=False)
 
-    def call_to_txt(self, fname='./call.txt') -> None:
+    def call_to_txt(self, file_path='./call.txt') -> None:
         ''' output callsign in DataFrame to text file '''
         if len(self.df_adif) == 0:
             raise AdifParserError('No records found in ADIF file')
 
         calls = set(self.df_adif['CALL'].to_list())
 
-        with open(fname, 'w') as f:
+        with open(file_path, 'w') as f:
             for call in calls:
                 f.write(f'{call}\n')
 
@@ -132,17 +132,17 @@ class ADIFParser():
             return False
 
     # Plot related methods
-    def plot_monthly(self, fname):
+    def plot_monthly(self, file_path):
         ''' plot monthly QSO bar chart'''
         if len(self.df_adif) == 0:
             raise AdifParserError('No records found in ADIF file')
-        monthly_qso(self.df_adif, fname)
+        monthly_qso(self.df_adif, file_path)
 
-    def plot_band_percentage(self, fname):
+    def plot_band_percentage(self, file_path):
         ''' plot band percentage pie chart'''
         if len(self.df_adif) == 0:
             raise AdifParserError('No records found in ADIF file')
-        band_percentage(self.df_adif, fname)
+        band_percentage(self.df_adif, file_path)
 
 
 # grid locator
