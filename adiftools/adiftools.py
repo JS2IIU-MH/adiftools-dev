@@ -86,6 +86,21 @@ class ADIFParser():
             raise AdifParserError('No records found in ADIF file')
         self.df_adif.to_csv(file_path, index=False)
 
+    def read_pickle(self, file_path):
+        ''' read DataFrame from pickle file '''
+        df = pd.read_pickle(file_path)
+        self.df_adif = df
+        self._fields = df.columns.tolist()
+        self._number_of_records = len(df)
+
+        return df
+
+    def to_pickle(self, file_path):
+        ''' save DataFrame to pickle file '''
+        if len(self.df_adif) == 0:
+            raise AdifParserError('No records found in ADIF file')
+        self.df_adif.to_pickle(file_path)
+
     def call_to_txt(self, file_path='./call.txt') -> None:
         ''' output callsign in DataFrame to text file '''
         if len(self.df_adif) == 0:
