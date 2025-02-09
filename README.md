@@ -38,7 +38,21 @@ This tool offers the capability to load all QSO data from an ADIF file into a Pa
     - `enable_timestamp`: bool, default: `False`
       - If True, add row named ['timestamp'] to DataFrame which is generated from ADIF file. The row ['timestamp'] is `datetime64[ns]` type and based on rows `'QSO_DATE'` and `'TIME_ON'`.
 
-- **Save ADIF data to pickle file**: Save the DataFrame with the ADIF loaded to a pickle file.
+- **Save ADIF data as adi file**
+  - Saves the loaded ADIF data as an adi file conforming to the ADIF standard. adiftools adds a new header to the beginning of the adi file.
+  - Fields with no data are filled with `nan`.
+  - The header will contain information on the following two fields, CREATED_TIMESTAMP, and PROGRAMID.
+  - Call signature:
+    ```python
+    ADIFParser.to_adi(file_path)
+    ```
+  - Parameter:
+    - `file_path`: str or path-like or binary file-like
+      - A path, or a Python file-like object of adi file to save
+    - Returns:
+      - `None`
+
+- **Save ADIF data as pickle file**: Save the DataFrame with the ADIF loaded to a pickle file.
   - Loading an ADIF file into a DataFrame can be quite time consuming.
   - It is especially long if there are many QSOsin the ADIF file, and it is very cumbersome to read the data every time.
   - It is recommended to serialize the ADIF data once loaded and save it in a pickle format, which is expected to be 50 times faster than loading a raw ADIF file.
@@ -66,7 +80,7 @@ This tool offers the capability to load all QSO data from an ADIF file into a Pa
       - `pd.DataFrame`
         - The created pandas.DataFrame instance includes QSO data from ADIF file 
 
-- **Save ADIF data to excel file**: Save the DataFrame with the ADIF loaded to an excel file.
+- **Save ADIF data as excel file**: Save the DataFrame with the ADIF loaded to an excel file.
   - Call signature:
     ```python
     ADIFParser.to_excel(file_path)

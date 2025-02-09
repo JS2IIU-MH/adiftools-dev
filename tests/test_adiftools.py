@@ -42,6 +42,11 @@ def test_read_adi(prep_data):
         'MY_GRIDSQUARE', 'COMMENT', 'GRIDSQUARE']
 
 
+def test_to_adi(prep_instance):
+    prep_instance.to_adi('tests/sample_out.adi')
+    assert True
+
+
 def test_plot_monthly(prep_instance):
     prep_instance.plot_monthly('tests/monthly_qso_test.png')
     assert True

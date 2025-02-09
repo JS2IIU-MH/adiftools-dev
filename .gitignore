@@ -176,6 +176,7 @@ docs/T*
 mytest.py
 .DS_store
 tests/sample_large.adi
+tests/sample_out.adi
 tests/*.png
 dist_history/
 *.xlsx
