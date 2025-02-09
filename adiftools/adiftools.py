@@ -86,6 +86,12 @@ class ADIFParser():
             raise AdifParserError('No records found in ADIF file')
         self.df_adif.to_csv(file_path, index=False)
 
+    def to_excel(self, file_path):
+        ''' save ADIF DataFrame to excel file '''
+        if len(self.df_adif) == 0:
+            raise AdifParserError('No records found in ADIF file')
+        self.df_adif.to_excel(file_path, index=False)
+
     def read_pickle(self, file_path):
         ''' read DataFrame from pickle file '''
         df = pd.read_pickle(file_path)

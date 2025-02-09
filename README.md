@@ -66,6 +66,17 @@ This tool offers the capability to load all QSO data from an ADIF file into a Pa
       - `pd.DataFrame`
         - The created pandas.DataFrame instance includes QSO data from ADIF file 
 
+- **Save ADIF data to excel file**: Save the DataFrame with the ADIF loaded to an excel file.
+  - Call signature:
+    ```python
+    ADIFParser.to_excel(file_path)
+    ```
+  - Parameter:
+    - `file_path`: str or path-like or binary file-like
+      - A path, or a Python file-like object of excel file to save
+    - Returns:
+      - `None`
+
 - **Generate Callsign file**
   - Outputs call sign data without duplicates from data read from an ADIF file as a text file. The text file will contain one callsign per line.
   - If the ADIF file has not been read, i.e., `read_adi()` has not been performed, it returns the error `AdifParserError`.
