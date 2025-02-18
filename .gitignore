@@ -173,6 +173,7 @@ cython_debug/
 # local data
 memo.md
 docs/T*
+docs/cty*
 mytest.py
 .DS_store
 tests/sample_large.adi
