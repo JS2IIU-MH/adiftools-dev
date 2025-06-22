@@ -1,7 +1,6 @@
 import datetime
 import re
 import multiprocessing as mp
-from functools import partial
 
 import pandas as pd
 
@@ -34,7 +33,8 @@ class ADIFParser():
         ''' initialize ADIFParser class '''
         self._fields = []
         self._number_of_records = 0
-        self._adif_pattern = re.compile(r'<(.*?):(\d+)>([^<]*)')  # Pre-compile regex
+        # Pre-compile regex pattern for better performance
+        self._adif_pattern = re.compile(r'<(.*?):(\d+)>([^<]*)')
         self.df_adif = pd.DataFrame()
 
     def read_adi(self, file_path, enable_timestamp=False):
@@ -196,27 +196,29 @@ class ADIFParser():
             raise AdifParserError('No records found in ADIF file')
         band_percentage(self.df_adif, file_path)
 
-    def read_adi_streaming(self, file_path, enable_timestamp=False, chunk_size=1000):
+    def read_adi_streaming(self, file_path, enable_timestamp=False,
+                           chunk_size=1000):
         ''' read adi file using streaming approach for large files '''
         records_list = []
         in_header = True
-        
+
         with open(file_path, 'r') as file:
             for line in file:
                 line = line.strip()
-                
+
                 # Skip header until first CALL record
                 if in_header:
                     if ("<CALL" in line) or ("<call" in line):
                         in_header = False
                     else:
                         continue
-                
+
                 # Process ADIF record
-                if line[:5].upper() == '<CALL' and line[-5:].upper() == '<EOR>':
+                if (line[:5].upper() == '<CALL' and
+                        line[-5:].upper() == '<EOR>'):
                     d = self._parse_adif_record(line)
                     records_list.append(d)
-                    
+
                     # Process in chunks to manage memory
                     if len(records_list) >= chunk_size:
                         if not hasattr(self, '_temp_dfs'):
@@ -224,14 +226,14 @@ class ADIFParser():
                         chunk_df = pd.DataFrame(records_list)
                         self._temp_dfs.append(chunk_df)
                         records_list = []
-        
+
         # Process remaining records
         if records_list:
             if not hasattr(self, '_temp_dfs'):
                 self._temp_dfs = []
             chunk_df = pd.DataFrame(records_list)
             self._temp_dfs.append(chunk_df)
-        
+
         # Combine all chunks
         if hasattr(self, '_temp_dfs') and self._temp_dfs:
             df = pd.concat(self._temp_dfs, ignore_index=True)
@@ -251,37 +253,40 @@ class ADIFParser():
 
         return df
 
-    def read_adi_parallel(self, file_path, enable_timestamp=False, num_processes=None):
+    def read_adi_parallel(self, file_path, enable_timestamp=False,
+                          num_processes=None):
         ''' read adi file using parallel processing for very large files '''
         if num_processes is None:
             num_processes = mp.cpu_count()
-        
+
         # Read all lines first to split work
         with open(file_path, 'r') as file:
             lines = file.readlines()
-        
+
         # Find start of data
         start_line = 0
         for i, line in enumerate(lines):
             if ("<CALL" in line) or ("<call" in line):
                 start_line = i
                 break
-        
+
         adif_data = lines[start_line:]
-        
+
         # Split data into chunks for parallel processing
         chunk_size = len(adif_data) // num_processes
-        chunks = [adif_data[i:i + chunk_size] for i in range(0, len(adif_data), chunk_size)]
-        
+        chunks = []
+        for i in range(0, len(adif_data), chunk_size):
+            chunks.append(adif_data[i:i + chunk_size])
+
         # Process chunks in parallel
         with mp.Pool(processes=num_processes) as pool:
             results = pool.map(self._process_chunk, chunks)
-        
+
         # Combine results
         all_records = []
         for chunk_records in results:
             all_records.extend(chunk_records)
-        
+
         # Build final DataFrame
         if all_records:
             df = pd.DataFrame(all_records)
@@ -299,12 +304,12 @@ class ADIFParser():
             df = self._add_timestamp(df)
 
         return df
-    
+
     def _process_chunk(self, chunk_lines):
         ''' Process a chunk of lines and return list of parsed records '''
         records = []
         pattern = re.compile(r'<(.*?):(\d+)>([^<]*)')
-        
+
         for line in chunk_lines:
             line = line.strip()
             if line[:5].upper() == '<CALL' and line[-5:].upper() == '<EOR>':
@@ -312,7 +317,7 @@ class ADIFParser():
                 d = {field[0].upper().strip(): field[2].upper().strip()
                      for field in fields}
                 records.append(d)
-        
+
         return records
 
 
