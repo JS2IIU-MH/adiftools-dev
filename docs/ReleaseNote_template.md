@@ -1,20 +1,36 @@
-# adiftools release 0.1.1
+
+# adiftools release x.x.x
 
 This is an official release version.
+
+## Release Date
+- YYYY-MM-DD
 
 ## Functions
 * Read adif file into Pandas DataFrame.
 * Generate basic Matplotlib plots from adif data.
 * Utility tool to calculate Grid Locator from/to geographic coordinate.
-  
 
-## New
+## New Features
+* (Describe new features here)
 
-* `adiftools.latlon2gl(latitude, longitude)`
-  * In this release, a function called latlon2gl() has been added. This function calculates a grid locator from latitude and longitude. The grid locator is output in 6-digit string format.
+## Improvements
+* (Describe improvements and enhancements here)
+
+## Bug Fixes
+* (Describe bug fixes here)
+
+## Breaking Changes
+* (List any breaking changes or backward-incompatible updates here)
+
+## Known Issues
+* (List any known issues or limitations here)
+
+## Upgrade Notes
+* (Describe any special upgrade instructions or precautions here)
 
 ## Install
-adiftools can now officially pip install from PyPI. If you have already installed a previous version, please update it with the following command All previous functions can still be used with this update.
+adiftools can be installed or updated from PyPI:
 
 ```shell
 pip install adiftools
@@ -24,11 +40,10 @@ pip install adiftools
 pip install -U adiftools
 ```
 
-* When you got an error from subprocess, try to install `wheel` by `pip install wheel` command
-
+* If you encounter an error related to subprocess, try installing `wheel` with `pip install wheel`.
 
 ## Other
 * Please report any issues with the release on the [adiftools issue tracker](issues).
-* 日本語での説明はJS2IIUのブログをご覧ください：[アマチュア無線局JS2IIU](https://js2iiu.com)
+* For Japanese documentation, see the JS2IIU blog: [アマチュア無線局JS2IIU](https://js2iiu.com)
 
 Thank you, JS2IIU
