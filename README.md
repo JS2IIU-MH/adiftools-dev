@@ -105,58 +105,62 @@ This tool offers the capability to load all QSO data from an ADIF file into a Pa
     - `None`
 
 
-- **ADIF data monthly plot**: generate monthly QSO plot
+
+- **ADIF data monthly plot**: Generate monthly QSO plot
   - Call signature:
     ```python
     ADIFParser.plot_monthly(file_path)
     ```
-    Generate bar plot of monthly QSOs and save png or jpg file. 
+    Generates a bar plot of monthly QSOs and saves a PNG or JPG file.
   - Parameters:
     - `file_path`: str or path-like or binary file-like
-      - A path, or a Python file-like object of plot's PNG or JPG file
+      - A path or a Python file-like object of the plot's PNG or JPG file.
   - Returns:
     - `None`
   
     <img src="https://js2iiu.com/wp-content/uploads/2024/12/monthly_qso_aa.png" width=600>
 
-- **Monthly Band QSO Stacked Bar Plot**: generate stacked bar plot of monthly QSO counts by band
+
+- **Monthly Band QSO Stacked Bar Plot**: Generate stacked bar plot of monthly QSO counts by band
   - Call signature:
     ```python
     ADIFParser.plot_monthly_band(file_path)
     ```
-    Generate stacked bar plot of monthly QSO counts by band and save png or jpg file.
+    Generates a stacked bar plot of monthly QSO counts by band and saves a PNG or JPG file.
   - Parameters:
     - `file_path`: str or path-like or binary file-like
-      - A path, or a Python file-like object of plot's PNG or JPG file
+      - A path or a Python file-like object of the plot's PNG or JPG file.
   - Returns:
     - `None`
   
-    <!-- sample img will come here -->
+    <!-- Add a sample image here if available -->
 
-- **Band percentage plot**: generate pie plot to show QSO-Band percentage
+
+- **Band percentage plot**: Generate pie plot to show QSO-Band percentage
   - Call signature:
     ```python
     ADIFParser.plot_band_percentage(file_path)
     ```
-    Generate pie plot of QSO-band counts and save png or jpg file. 
-  - Patameters:
+    Generates a pie plot of QSO-band counts and saves a PNG or JPG file.
+  - Parameters:
     - `file_path`: str or path-like or binary file-like
-      - A path, or a Python file-like object of plot's PNG or JPG file
+      - A path or a Python file-like object of the plot's PNG or JPG file.
   - Returns:
     - `None`
 
     <img src="https://js2iiu.com/wp-content/uploads/2025/01/percentage_band.png" width=500>
 
+
 - **Grid Locator utilities**
-  - Calculate geographic coodination from GL
-    - Call signature
+  - Calculate geographic coordination from GL
+    - Call signature:
       ```python
       adiftools.gl2latlon(gridlocator)
       ```
     - Parameter:
-      - `gridlocator`: str of gridlocator. 4 or 6 digits, regardless upper case or lower case. 
+      - `gridlocator`: str of grid locator. 4 or 6 digits, regardless of upper or lower case.
     - Returns:
-      - `(latitude, longitude)`: tuple of latitude and longitude in decimal degree unit (DD/DEG format)
+      - `(latitude, longitude)`: tuple of latitude and longitude in decimal degree unit (DD/DEG format).
 
   - Calculate grid locators from latitude and longitude
     - Call signature
