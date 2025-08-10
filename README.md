@@ -104,19 +104,34 @@ This tool offers the capability to load all QSO data from an ADIF file into a Pa
   - Returns:
     - `None`
 
-- **ADIF data monthly plot**: generate manthly QSO plot
+
+- **ADIF data monthly plot**: generate monthly QSO plot
   - Call signature:
     ```python
     ADIFParser.plot_monthly(file_path)
     ```
     Generate bar plot of monthly QSOs and save png or jpg file. 
-  - Patameters:
+  - Parameters:
     - `file_path`: str or path-like or binary file-like
       - A path, or a Python file-like object of plot's PNG or JPG file
   - Returns:
     - `None`
   
     <img src="https://js2iiu.com/wp-content/uploads/2024/12/monthly_qso_aa.png" width=600>
+
+- **Monthly Band QSO Stacked Bar Plot**: generate stacked bar plot of monthly QSO counts by band
+  - Call signature:
+    ```python
+    ADIFParser.plot_monthly_band(file_path)
+    ```
+    Generate stacked bar plot of monthly QSO counts by band and save png or jpg file.
+  - Parameters:
+    - `file_path`: str or path-like or binary file-like
+      - A path, or a Python file-like object of plot's PNG or JPG file
+  - Returns:
+    - `None`
+  
+    <!-- sample img will come here -->
 
 - **Band percentage plot**: generate pie plot to show QSO-Band percentage
   - Call signature:
