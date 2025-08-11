@@ -1,7 +1,4 @@
-
-
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -9,6 +6,8 @@ try:
     from adiftools.errors import AdifParserError
 except ModuleNotFoundError or ImportError:
     from errors import AdifParserError
+
+matplotlib.use('Agg')
 
 
 def monthly_qso(df, fname):
@@ -90,7 +89,6 @@ def monthly_band_qso(df, fname):
     # grouped['QSO_MONTH'] = grouped['QSO_MONTH'].astype(str)
     grouped['QSO_MONTH'] = grouped['QSO_MONTH'].dt.strftime('%Y-%m')
 
-
     # BANDごとの色テーブル（必要に応じて編集）
     band_colors = {
         '2M': '#FF1493',
@@ -115,7 +113,7 @@ def monthly_band_qso(df, fname):
     bands = [col for col in grouped.columns if col != 'QSO_MONTH']
 
     # 未定義BANDにはカラーマップから重複しない色を割り当て
-    import itertools
+    # import itertools
     import matplotlib as mpl
     cmap = plt.get_cmap('tab20')
     used_colors = set(band_colors.values())
@@ -131,7 +129,8 @@ def monthly_band_qso(df, fname):
                     break
 
     colors = [band_color_map[band] for band in bands]
-    grouped.plot(x='QSO_MONTH', y=bands, kind='bar', stacked=True, ax=ax, color=colors)
+    grouped.plot(x='QSO_MONTH', y=bands, kind='bar',
+                 stacked=True, ax=ax, color=colors)
 
     plt.title('Monthly QSO by Band')
     plt.xlabel('Month')
@@ -148,7 +147,9 @@ def monthly_band_qso(df, fname):
             text_rotation = 0
         else:
             text_rotation = 90
-        ax.text(idx, total + 1, str(int(total)), ha='center', va='bottom', size='small', rotation=text_rotation)
+        ax.text(idx, total + 1, str(int(total)),
+                ha='center', va='bottom', size='small',
+                rotation=text_rotation)
 
     plt.subplots_adjust(left=0.08, right=0.98, bottom=0.18, top=0.93)
     plt.savefig(fname)
