@@ -90,9 +90,48 @@ def monthly_band_qso(df, fname):
     # grouped['QSO_MONTH'] = grouped['QSO_MONTH'].astype(str)
     grouped['QSO_MONTH'] = grouped['QSO_MONTH'].dt.strftime('%Y-%m')
 
+
+    # BANDごとの色テーブル（必要に応じて編集）
+    band_colors = {
+        '2M': '#FF1493',
+        '4M': '#CC0044',
+        '5M': '#E0E0E0',
+        '6M': '#FF0000',
+        '8M': '#7F00F1',
+        '10M': '#FF69B4',
+        '11M': '#00FF00',
+        '12M': '#B22222',
+        '15M': '#CCA166',
+        '17M': '#F2F261',
+        '20M': '#F2C40C',
+        '30M': '#62D962',
+        '40M': '#5959FF',
+        '80M': '#E550E5',
+        '160M': '#7CFC00',
+        # 必要に応じて追加
+    }
+
     fig, ax = plt.subplots(figsize=(12, 6))
     bands = [col for col in grouped.columns if col != 'QSO_MONTH']
-    grouped.plot(x='QSO_MONTH', y=bands, kind='bar', stacked=True, ax=ax)
+
+    # 未定義BANDにはカラーマップから重複しない色を割り当て
+    import itertools
+    import matplotlib as mpl
+    cmap = plt.get_cmap('tab20')
+    used_colors = set(band_colors.values())
+    color_cycle = (mpl.colors.to_hex(cmap(i)) for i in range(cmap.N))
+    band_color_map = band_colors.copy()
+    for band in bands:
+        if band not in band_color_map:
+            # 未使用色を順に割り当て
+            for color in color_cycle:
+                if color not in used_colors:
+                    band_color_map[band] = color
+                    used_colors.add(color)
+                    break
+
+    colors = [band_color_map[band] for band in bands]
+    grouped.plot(x='QSO_MONTH', y=bands, kind='bar', stacked=True, ax=ax, color=colors)
 
     plt.title('Monthly QSO by Band')
     plt.xlabel('Month')

@@ -121,12 +121,14 @@ This tool offers the capability to load all QSO data from an ADIF file into a Pa
     <img src="https://js2iiu.com/wp-content/uploads/2024/12/monthly_qso_aa.png" width=600>
 
 
+
 - **Monthly Band QSO Stacked Bar Plot**: Generate stacked bar plot of monthly QSO counts by band
   - Call signature:
     ```python
     ADIFParser.plot_monthly_band(file_path)
     ```
     Generates a stacked bar plot of monthly QSO counts by band and saves a PNG or JPG file.
+    Each band is assigned a unique color for clarity. The color table for each BAND is defined inside the function, and if a BAND is not listed, a unique color is automatically assigned from a colormap to avoid duplication.
   - Parameters:
     - `file_path`: str or path-like or binary file-like
       - A path or a Python file-like object of the plot's PNG or JPG file.
