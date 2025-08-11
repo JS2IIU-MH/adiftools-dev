@@ -10,33 +10,34 @@
 | Item | Status |
 | :---: | --- |
 | Testing | ![](https://byob.yarr.is/JS2IIU-MH/adiftools-dev/passing_lints) ![](https://byob.yarr.is/JS2IIU-MH/adiftools-dev/passing_pytest) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/adiftools)  ![GitHub issue custom search in repo](https://img.shields.io/github/issues-search/JS2IIU-MH/adiftools-dev?query=is%3Aclosed&label=closed%20issue) |
-| Package | ![GitHub Release](https://img.shields.io/github/v/release/JS2IIU-MH/adiftools-dev) |
+| Package | ![GitHub Release](https://img.shields.io/github/v/release/JS2IIU-MH/adiftools-dev) ![GitHub Release Date](https://img.shields.io/github/release-date/JS2IIU-MH/adiftools-dev) |
 | Meta | [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](LICENSE) ![](https://byob.yarr.is/JS2IIU-MH/adiftools-dev/time1) |
-| Stats | ![PyPI - Downloads](https://img.shields.io/pypi/dm/adiftools?logo=pypi) ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/JS2IIU-MH/adiftools-dev/total?logo=github) |
+| Stats | ![PyPI - Downloads](https://img.shields.io/pypi/dm/adiftools?logo=pypi) ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/JS2IIU-MH/adiftools-dev/total?logo=github) ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/JS2IIU-MH/adiftools-dev)
+ |
 
 ## What is it?
 
 **adiftools** is a Python package that provides utilities for ADIF data which is used for the QSO logging file format.
 
-This tool offers the capability to load all QSO data from an ADIF file into a Pandas DataFrame. Additionally, it provides functionalities for graphing the loaded data, along with utility functions for Grid Locator-related latitude and longitude conversion and distance measurement.
+This tool allows you to easily load all QSO data from an ADIF file into a pandas DataFrame. Additionally, it provides functions for graphing the loaded data, as well as utility functions for Grid Locator-related latitude and longitude conversion and distance measurement.
 
 ## Main Features
 
-- **ADIF file parser**: read ADIF file and convert to Pandas DataFrame
+
+- **ADIF file parser**: Read ADIF file and convert to pandas DataFrame
   - Call signature:
     ```python
     ADIFParser.read_adi(file_path, enable_timestamp=False)
     ```
-  - Parameter:
+  - Parameters:
     - `file_path`: str or path-like or binary file-like
-      - A path, or a Python file-like object of ADIF file to read
+      - A path or a Python file-like object representing the ADIF file to read.
   - Returns:
     - `pd.DataFrame`
-      - The created pandas.DataFrame instance includes QSO data from ADIF file 
-  
-  - Other Parameter:
+      - The created pandas DataFrame instance includes QSO data from the ADIF file.
+  - Other Parameters:
     - `enable_timestamp`: bool, default: `False`
-      - If True, add row named ['timestamp'] to DataFrame which is generated from ADIF file. The row ['timestamp'] is `datetime64[ns]` type and based on rows `'QSO_DATE'` and `'TIME_ON'`.
+      - If True, adds a row named ['timestamp'] to the DataFrame, generated from the ADIF file. The ['timestamp'] row is of type `datetime64[ns]` and is based on the `'QSO_DATE'` and `'TIME_ON'` fields.
 
 - **Save ADIF data as adi file**
   - Saves the loaded ADIF data as an adi file conforming to the ADIF standard. adiftools adds a new header to the beginning of the adi file.
@@ -128,14 +129,38 @@ This tool offers the capability to load all QSO data from an ADIF file into a Pa
     ADIFParser.plot_monthly_band(file_path)
     ```
     Generates a stacked bar plot of monthly QSO counts by band and saves a PNG or JPG file.
-    Each band is assigned a unique color for clarity. The color table for each BAND is defined inside the function, and if a BAND is not listed, a unique color is automatically assigned from a colormap to avoid duplication.
+  Each band is assigned a unique color for clarity. The color table for each BAND is defined inside the function, and if a BAND is not listed, a unique color is automatically assigned from a colormap to avoid duplication.
+    
+  The color codes are inspired by the color scheme used on the website [PSKReporter](https://pskreporter.info/pskmap.html). We would like to acknowledge and thank PSKReporter for their excellent and informative color palette.
+    
+  If you wish to customize the color assignment, please edit the color table in the source code of the function `monthly_band_qso` in `adifgraph.py`.
   - Parameters:
     - `file_path`: str or path-like or binary file-like
       - A path or a Python file-like object of the plot's PNG or JPG file.
   - Returns:
     - `None`
   
-    <!-- Add a sample image here if available -->
+  <img src="./docs/monthly_band_qso.png" width=600>
+
+  | BAND  | Color Code |
+  |-------|------------|
+  | 2M    | #FF1493    |
+  | 4M    | #CC0044    |
+  | 5M    | #E0E0E0    |
+  | 6M    | #FF0000    |
+  | 8M    | #7F00F1    |
+  | 10M   | #FF69B4    |
+  | 11M   | #00FF00    |
+  | 12M   | #B22222    |
+  | 15M   | #CCA166    |
+  | 17M   | #F2F261    |
+  | 20M   | #F2C40C    |
+  | 30M   | #62D962    |
+  | 40M   | #5959FF    |
+  | 80M   | #E550E5    |
+  | 160M  | #7CFC00    |
+    
+  Any BAND not listed above will be assigned a unique color from the colormap automatically.
 
 
 - **Band percentage plot**: Generate pie plot to show QSO-Band percentage
@@ -259,10 +284,20 @@ print(df)
 ```
 
 ## Dependencies
-- [Pandas](https://pandas.pydata.org)
+adiftools requires the following Python packages (recommended versions):
+- [pandas](https://pandas.pydata.org) (>=1.5)
 - [numpy](https://numpy.org/doc/stable/index.html)
-- [matplotlib](https://matplotlib.org)
+- [matplotlib](https://matplotlib.org) (>=3.5)
 - [GeographicLib API](https://geographiclib.sourceforge.io/Python/doc/code.html)
+
+You can install all dependencies with:
+```sh
+pip install adiftools
+```
+## FAQ / Troubleshooting
+
+- If you encounter an error related to subprocess or wheel, please try installing `wheel` with `pip install wheel`.
+- For other common issues, please refer to the [adiftools issue tracker](https://github.com/JS2IIU-MH/adiftools-dev/issues) or open a new issue for support.
 
 ## Licence
 [MIT](LICENSE)
