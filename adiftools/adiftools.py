@@ -34,7 +34,7 @@ class ADIFParser():
         self._fields = []
         self._number_of_records = 0
         # Pre-compile regex pattern for better performance
-        self._adif_pattern = re.compile(r'<(.*?):(\d+)>([^<]*)')
+        self._adif_pattern = re.compile(r'<(.*?):([^>]+)>([^<]*)')
         self.df_adif = pd.DataFrame()
 
     def read_adi(self, file_path, enable_timestamp=False):
@@ -56,7 +56,7 @@ class ADIFParser():
         for record in adif_data:
             record = record.strip()
 
-            if record[:5].upper() == '<CALL' and\
+            if '<CALL' in record.upper() and\
                     record[-5:].upper() == '<EOR>':
                 d = self._parse_adif_record(record)
                 records_list.append(d)
