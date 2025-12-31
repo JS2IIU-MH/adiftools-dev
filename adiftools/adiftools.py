@@ -55,9 +55,12 @@ class ADIFParser():
 
         for record in adif_data:
             record = record.strip()
+            record = record.upper()
 
-            if '<CALL' in record.upper() and\
-                    record[-5:].upper() == '<EOR>':
+            # ADIF fields may appear in any order; check presence of CALL
+            # anywhere in the record (case-insensitive) and ensure record
+            # ends with <EOR> (case-insensitive).
+            if '<CALL' in record and record.endswith('<EOR>'):
                 d = self._parse_adif_record(record)
                 records_list.append(d)
 
@@ -213,9 +216,9 @@ class ADIFParser():
                     else:
                         continue
 
-                # Process ADIF record
-                if (line[:5].upper() == '<CALL' and
-                        line[-5:].upper() == '<EOR>'):
+                # Process ADIF record. ADIF fields can be in any order,
+                # so look for CALL anywhere and ensure record ends with <EOR>.
+                if '<CALL' in line.upper() and line.upper().endswith('<EOR>'):
                     d = self._parse_adif_record(line)
                     records_list.append(d)
 
@@ -312,7 +315,7 @@ class ADIFParser():
 
         for line in chunk_lines:
             line = line.strip()
-            if line[:5].upper() == '<CALL' and line[-5:].upper() == '<EOR>':
+            if '<CALL' in line.upper() and line.upper().endswith('<EOR>'):
                 fields = pattern.findall(line)
                 d = {field[0].upper().strip(): field[2].upper().strip()
                      for field in fields}
