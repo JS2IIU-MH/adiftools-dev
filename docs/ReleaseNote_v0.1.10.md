@@ -6,6 +6,13 @@ This is an official release version.
 
 - 2025-12-31
 
+## Acknowledgement
+
+Thank you to the two people who reported issues related to ADIF parsing.
+
+- @clarljc reported parsing issue #3 on ADIF file from PSK Reporter
+- @Singer reported ADIF record parsing issue #2
+
 ## Functions
 
 * Read ADIF file into pandas DataFrame.
@@ -31,7 +38,6 @@ This is an official release version.
 * Fixed an issue where records were ignored if the `CALL` field did not appear at the start of the line. This caused some QSOs to be missed when fields were reordered by logging software.
 
 Special thanks to Stefano IZ0MJE for reporting the field-order parsing issue and proposing an approach.
-
 
 ## Upgrade Notes
 
