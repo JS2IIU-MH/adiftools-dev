@@ -12,8 +12,7 @@
 | Testing | ![](https://byob.yarr.is/JS2IIU-MH/adiftools-dev/passing_lints) ![](https://byob.yarr.is/JS2IIU-MH/adiftools-dev/passing_pytest) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/adiftools)  ![GitHub issue custom search in repo](https://img.shields.io/github/issues-search/JS2IIU-MH/adiftools-dev?query=is%3Aclosed&label=closed%20issue) |
 | Package | ![GitHub Release](https://img.shields.io/github/v/release/JS2IIU-MH/adiftools-dev) ![GitHub Release Date](https://img.shields.io/github/release-date/JS2IIU-MH/adiftools-dev) |
 | Meta | [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](LICENSE) ![](https://byob.yarr.is/JS2IIU-MH/adiftools-dev/time1) |
-| Stats | ![PyPI - Downloads](https://img.shields.io/pypi/dm/adiftools?logo=pypi) ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/JS2IIU-MH/adiftools-dev/total?logo=github) ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/JS2IIU-MH/adiftools-dev)
- |
+| Stats | ![PyPI - Downloads](https://img.shields.io/pypi/dm/adiftools?logo=pypi) ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/JS2IIU-MH/adiftools-dev/total?logo=github) ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/JS2IIU-MH/adiftools-dev) |
 
 ## What is it?
 
@@ -22,7 +21,6 @@
 This tool allows you to easily load all QSO data from an ADIF file into a pandas DataFrame. Additionally, it provides functions for graphing the loaded data, as well as utility functions for Grid Locator-related latitude and longitude conversion and distance measurement.
 
 ## Main Features
-
 
 - **ADIF file parser**: Read ADIF file and convert to pandas DataFrame
   - Call signature:
@@ -105,8 +103,6 @@ This tool allows you to easily load all QSO data from an ADIF file into a pandas
   - Returns:
     - `None`
 
-
-
 - **ADIF data monthly plot**: Generate monthly QSO plot
   - Call signature:
     ```python
@@ -120,8 +116,6 @@ This tool allows you to easily load all QSO data from an ADIF file into a pandas
     - `None`
   
     <img src="https://js2iiu.com/wp-content/uploads/2024/12/monthly_qso_aa.png" width=600>
-
-
 
 - **Monthly Band QSO Stacked Bar Plot**: Generate stacked bar plot of monthly QSO counts by band
   - Call signature:
