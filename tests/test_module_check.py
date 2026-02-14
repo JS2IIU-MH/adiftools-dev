@@ -16,7 +16,7 @@ def test_module_check_no_side_effect():
         text=True,
         cwd='/home/runner/work/adiftools-dev/adiftools-dev'
     )
-    
+
     # Should have no stdout when importing
     assert result.stdout == '', f"Expected no output, but got: {result.stdout}"
     assert result.returncode == 0
@@ -30,7 +30,7 @@ def test_module_check_main_produces_output():
         text=True,
         cwd='/home/runner/work/adiftools-dev/adiftools-dev'
     )
-    
+
     # Should produce output when run as main
     assert result.stdout.strip() != '', "Expected output when run as __main__"
     assert 'adiftools' in result.stdout

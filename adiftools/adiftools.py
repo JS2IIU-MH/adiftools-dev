@@ -274,7 +274,7 @@ class ADIFParser():
         # Split by record terminator to get individual records
         # Use case-insensitive split for <EOR> or <eor>
         records_raw = re.split(r'<EOR>|<eor>', content, flags=re.IGNORECASE)
-        
+
         # Filter out empty records and records without CALL field
         adif_records = []
         for record in records_raw:
@@ -289,7 +289,7 @@ class ADIFParser():
         num_records = len(adif_records)
         actual_processes = min(num_processes, num_records)
         chunk_size = max(1, num_records // actual_processes)
-        
+
         # Split records into chunks for parallel processing
         chunks = []
         for i in range(0, num_records, chunk_size):
@@ -334,7 +334,7 @@ class ADIFParser():
             record = record.strip()
             if not record:
                 continue
-                
+
             # Parse all fields in the record
             fields = pattern.findall(record)
             d = {}
@@ -345,7 +345,7 @@ class ADIFParser():
                 # Only uppercase the value, preserving original case sensitivity where needed
                 # But ADIF spec typically uses uppercase for field values
                 d[field_name] = field_value.upper()
-            
+
             # Only add records that have a CALL field
             if 'CALL' in d:
                 parsed_records.append(d)
