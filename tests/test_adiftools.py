@@ -208,3 +208,40 @@ def test_get_area_num(callsign, expected):
 
 
 # TODO: use test fixture to create a temporary file
+
+
+def test_read_adi_parallel_basic():
+    """Test basic parallel reading"""
+    parser = adiftools.ADIFParser()
+    df = parser.read_adi_parallel('tests/sample.adi', num_processes=4)
+    assert df.shape == (126, 14)
+    assert parser.number_of_records == 126
+
+
+def test_read_adi_parallel_high_process_count():
+    """Test parallel reading with more processes than records - prevents chunk_size=0 bug"""
+    parser = adiftools.ADIFParser()
+    # This should not crash even though we have way more processes than records
+    df = parser.read_adi_parallel('tests/sample.adi', num_processes=200)
+    assert df.shape == (126, 14)
+    assert parser.number_of_records == 126
+
+
+def test_read_adi_parallel_single_process():
+    """Test parallel reading with single process"""
+    parser = adiftools.ADIFParser()
+    df = parser.read_adi_parallel('tests/sample.adi', num_processes=1)
+    assert df.shape == (126, 14)
+    assert parser.number_of_records == 126
+
+
+def test_read_adi_parallel_matches_serial():
+    """Test that parallel reading produces same results as serial"""
+    parser_parallel = adiftools.ADIFParser()
+    df_parallel = parser_parallel.read_adi_parallel('tests/sample.adi', num_processes=4)
+
+    parser_serial = adiftools.ADIFParser()
+    df_serial = parser_serial.read_adi('tests/sample.adi')
+
+    assert df_parallel.shape == df_serial.shape
+    assert set(df_parallel.columns) == set(df_serial.columns)
