@@ -1,7 +1,4 @@
 import pytest
-import tempfile
-from pathlib import Path
-from typing import Any, Generator
 
 from adiftools import adiftools
 
@@ -22,16 +19,6 @@ def prep_data():
     return df
 
 
-@pytest.fixture(scope='function')
-def txt_file() -> Generator[Path, Any, None]:
-    ''' csv tempfile '''
-    path = Path(tempfile.NamedTemporaryFile(suffix='.txt', delete=False).name)
-    yield path
-
-    # delete tempfile after test
-    path.unlink()
-
-
 def test_read_adi(prep_data):
     ''' test adif DataFrame '''
     assert prep_data.shape == (126, 14)
@@ -42,28 +29,32 @@ def test_read_adi(prep_data):
         'MY_GRIDSQUARE', 'COMMENT', 'GRIDSQUARE']
 
 
-def test_to_adi(prep_instance):
-    prep_instance.to_adi('tests/sample_out.adi')
-    assert True
+def test_to_adi(prep_instance, tmp_path):
+    out = tmp_path / 'sample_out.adi'
+    prep_instance.to_adi(str(out))
+    assert out.exists()
 
 
-def test_plot_monthly(prep_instance):
-    prep_instance.plot_monthly('tests/monthly_qso_test.png')
-    assert True
+def test_plot_monthly(prep_instance, tmp_path):
+    out = tmp_path / 'monthly_qso_test.png'
+    prep_instance.plot_monthly(str(out))
+    assert out.exists()
 
 
-def test_plot_band_percentage(prep_instance):
-    prep_instance.plot_band_percentage('tests/percentage_band_test.png')
-    assert True
+def test_plot_band_percentage(prep_instance, tmp_path):
+    out = tmp_path / 'percentage_band_test.png'
+    prep_instance.plot_band_percentage(str(out))
+    assert out.exists()
 
 
 def test_number_of_records(prep_instance):
     assert prep_instance.number_of_records == 126
 
 
-def test_call_to_txt(prep_instance, txt_file):
-    prep_instance.call_to_txt(txt_file)
-    assert True
+def test_call_to_txt(prep_instance, tmp_path):
+    out = tmp_path / 'calls.txt'
+    prep_instance.call_to_txt(str(out))
+    assert out.exists()
 
 
 @pytest.mark.parametrize(
@@ -205,6 +196,3 @@ def test_error_is_ja(callsign, expected):
 )
 def test_get_area_num(callsign, expected):
     assert expected == adiftools.get_area(callsign)
-
-
-# TODO: use test fixture to create a temporary file
