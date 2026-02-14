@@ -262,24 +262,46 @@ class ADIFParser():
         if num_processes is None:
             num_processes = mp.cpu_count()
 
-        # Read all lines first to split work
+        # Read file and collect complete ADIF records (ending with <EOR>)
+        records_raw = []
+        in_header = True
+        current_record = []
+
         with open(file_path, 'r') as file:
-            lines = file.readlines()
+            for line in file:
+                # Skip header until first CALL record
+                if in_header:
+                    if ("<CALL" in line) or ("<call" in line):
+                        in_header = False
+                        current_record.append(line)
+                    else:
+                        continue
+                else:
+                    current_record.append(line)
 
-        # Find start of data
-        start_line = 0
-        for i, line in enumerate(lines):
-            if ("<CALL" in line) or ("<call" in line):
-                start_line = i
-                break
+                # Check if record is complete (ends with <EOR>)
+                if line.strip().upper().endswith('<EOR>'):
+                    # Join multi-line record into single string
+                    records_raw.append(''.join(current_record))
+                    current_record = []
 
-        adif_data = lines[start_line:]
+        # If there are leftover lines (malformed file), add them
+        if current_record:
+            records_raw.append(''.join(current_record))
 
-        # Split data into chunks for parallel processing
-        chunk_size = len(adif_data) // num_processes
+        # Ensure we have at least one record per process, adjust num_processes
+        if len(records_raw) < num_processes:
+            num_processes = max(1, len(records_raw))
+
+        # Split records into chunks for parallel processing
+        chunk_size = len(records_raw) // num_processes
+        # Handle case where division leaves remainder
+        if chunk_size == 0:
+            chunk_size = 1
+
         chunks = []
-        for i in range(0, len(adif_data), chunk_size):
-            chunks.append(adif_data[i:i + chunk_size])
+        for i in range(0, len(records_raw), chunk_size):
+            chunks.append(records_raw[i:i + chunk_size])
 
         # Process chunks in parallel
         with mp.Pool(processes=num_processes) as pool:
@@ -308,15 +330,16 @@ class ADIFParser():
 
         return df
 
-    def _process_chunk(self, chunk_lines):
-        ''' Process a chunk of lines and return list of parsed records '''
+    def _process_chunk(self, chunk_records):
+        ''' Process a chunk of record strings and return list of parsed records '''
         records = []
-        pattern = re.compile(r'<(.*?):(\d+)>([^<]*)')
+        # Use more restrictive pattern: field names shouldn't contain colons
+        pattern = re.compile(r'<([^:]+?):(\d+)>([^<]*)')
 
-        for line in chunk_lines:
-            line = line.strip()
-            if '<CALL' in line.upper() and line.upper().endswith('<EOR>'):
-                fields = pattern.findall(line)
+        for record in chunk_records:
+            record = record.strip()
+            if '<CALL' in record.upper() and record.upper().endswith('<EOR>'):
+                fields = pattern.findall(record)
                 d = {field[0].upper().strip(): field[2].upper().strip()
                      for field in fields}
                 records.append(d)
