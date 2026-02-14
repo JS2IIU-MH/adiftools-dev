@@ -262,27 +262,41 @@ class ADIFParser():
         if num_processes is None:
             num_processes = mp.cpu_count()
 
-        # Read all lines first to split work
+        # Read entire file content
         with open(file_path, 'r') as file:
-            lines = file.readlines()
+            content = file.read()
 
-        # Find start of data
-        start_line = 0
-        for i, line in enumerate(lines):
-            if ("<CALL" in line) or ("<call" in line):
-                start_line = i
-                break
+        # Find start of data (skip header)
+        header_end = content.upper().find('<EOH>')
+        if header_end != -1:
+            content = content[header_end + 5:]  # Skip <EOH> tag
 
-        adif_data = lines[start_line:]
+        # Split by record terminator to get individual records
+        # Use case-insensitive split for <EOR> or <eor>
+        records_raw = re.split(r'<EOR>|<eor>', content, flags=re.IGNORECASE)
 
-        # Split data into chunks for parallel processing
-        chunk_size = len(adif_data) // num_processes
+        # Filter out empty records and records without CALL field
+        adif_records = []
+        for record in records_raw:
+            record = record.strip()
+            if record and ('<CALL' in record.upper()):
+                adif_records.append(record)
+
+        if not adif_records:
+            raise AdifParserError('No records found in ADIF file')
+
+        # Determine optimal chunk size, avoiding chunk_size == 0
+        num_records = len(adif_records)
+        actual_processes = min(num_processes, num_records)
+        chunk_size = max(1, num_records // actual_processes)
+
+        # Split records into chunks for parallel processing
         chunks = []
-        for i in range(0, len(adif_data), chunk_size):
-            chunks.append(adif_data[i:i + chunk_size])
+        for i in range(0, num_records, chunk_size):
+            chunks.append(adif_records[i:i + chunk_size])
 
         # Process chunks in parallel
-        with mp.Pool(processes=num_processes) as pool:
+        with mp.Pool(processes=actual_processes) as pool:
             results = pool.map(self._process_chunk, chunks)
 
         # Combine results
@@ -308,20 +322,35 @@ class ADIFParser():
 
         return df
 
-    def _process_chunk(self, chunk_lines):
-        ''' Process a chunk of lines and return list of parsed records '''
-        records = []
-        pattern = re.compile(r'<(.*?):(\d+)>([^<]*)')
+    def _process_chunk(self, chunk_records):
+        ''' Process a chunk of ADIF records and return list of parsed records '''
+        parsed_records = []
+        # More robust regex pattern that handles various field formats
+        # Matches: <FIELD_NAME:LENGTH[:TYPE]>VALUE
+        # The pattern allows for optional type indicator and flexible whitespace
+        pattern = re.compile(r'<([^:>]+):([^:>]+)(?::[^>]*)?>([^<]*)', re.IGNORECASE)
 
-        for line in chunk_lines:
-            line = line.strip()
-            if '<CALL' in line.upper() and line.upper().endswith('<EOR>'):
-                fields = pattern.findall(line)
-                d = {field[0].upper().strip(): field[2].upper().strip()
-                     for field in fields}
-                records.append(d)
+        for record in chunk_records:
+            record = record.strip()
+            if not record:
+                continue
 
-        return records
+            # Parse all fields in the record
+            fields = pattern.findall(record)
+            d = {}
+            for field in fields:
+                field_name = field[0].upper().strip()
+                # field[1] is the length indicator (we don't use it for parsing)
+                field_value = field[2].strip()
+                # Only uppercase the value, preserving original case sensitivity where needed
+                # But ADIF spec typically uses uppercase for field values
+                d[field_name] = field_value.upper()
+
+            # Only add records that have a CALL field
+            if 'CALL' in d:
+                parsed_records.append(d)
+
+        return parsed_records
 
 
 # grid locator
