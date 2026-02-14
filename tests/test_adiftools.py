@@ -239,10 +239,9 @@ def test_read_adi_parallel_matches_serial():
     """Test that parallel reading produces same results as serial"""
     parser_parallel = adiftools.ADIFParser()
     df_parallel = parser_parallel.read_adi_parallel('tests/sample.adi', num_processes=4)
-    
+
     parser_serial = adiftools.ADIFParser()
     df_serial = parser_serial.read_adi('tests/sample.adi')
-    
+
     assert df_parallel.shape == df_serial.shape
-    assert len(df_parallel) == len(df_serial)
     assert set(df_parallel.columns) == set(df_serial.columns)

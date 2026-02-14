@@ -291,7 +291,7 @@ class ADIFParser():
 
         # Ensure we have at least one record per process, adjust num_processes
         if len(records_raw) < num_processes:
-            num_processes = max(1, len(records_raw))
+            num_processes = len(records_raw) if records_raw else 1
 
         # Split records into chunks for parallel processing
         chunk_size = len(records_raw) // num_processes
