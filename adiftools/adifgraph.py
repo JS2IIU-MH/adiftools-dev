@@ -4,7 +4,7 @@ import pandas as pd
 
 try:
     from adiftools.errors import AdifParserError
-except ModuleNotFoundError or ImportError:
+except (ModuleNotFoundError, ImportError):
     from errors import AdifParserError
 
 matplotlib.use('Agg')
@@ -12,10 +12,11 @@ matplotlib.use('Agg')
 
 def monthly_qso(df, fname):
     ''' plot monthly QSO '''
-    if len(df) < 0:
+    if len(df) == 0:
         raise AdifParserError('Empty adif data')
 
-    df['QSO_DATE'] = pd.to_datetime(df['QSO_DATE'])
+    df['QSO_DATE'] = pd.to_datetime(df['QSO_DATE'], errors='coerce')
+    df = df.dropna(subset=['QSO_DATE'])
     df['QSO_DATE'] = df['QSO_DATE'].dt.to_period('M')
     df = df.groupby('QSO_DATE').size().reset_index(name='counts')
     df.set_index('QSO_DATE', inplace=True)
@@ -53,7 +54,7 @@ def monthly_qso(df, fname):
 def band_percentage(df, fname):
     ''' generate circle graph for band percentage '''
     # caclulate mode percentage
-    if len(df) < 0:
+    if len(df) == 0:
         raise AdifParserError('Empty adif data')
 
     if 'BAND' in df.columns:
@@ -72,17 +73,17 @@ def band_percentage(df, fname):
 
 def monthly_band_qso(df, fname):
     '''バンド別の月間QSO数を積み上げ棒グラフで描画'''
-    if len(df) < 0:
+    if len(df) == 0:
         raise AdifParserError('Empty adif data')
 
     if 'BAND' not in df.columns:
         raise ValueError('BAND column not found in DataFrame')
 
-    from pandas.api.types import PeriodDtype
-    if isinstance(df['QSO_DATE'].dtype, PeriodDtype):
+    if isinstance(df['QSO_DATE'].dtype, pd.PeriodDtype):
         df['QSO_DATE'] = df['QSO_DATE'].dt.to_timestamp()
     else:
-        df['QSO_DATE'] = pd.to_datetime(df['QSO_DATE'])
+        df['QSO_DATE'] = pd.to_datetime(df['QSO_DATE'], errors='coerce')
+    df = df.dropna(subset=['QSO_DATE'])
     df['QSO_MONTH'] = df['QSO_DATE'].dt.to_period('M').dt.to_timestamp()
     grouped = df.groupby(['QSO_MONTH', 'BAND']).size().unstack(fill_value=0)
     grouped = grouped.reset_index()
