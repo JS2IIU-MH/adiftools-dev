@@ -1,5 +1,5 @@
 <picture align="center">
-    <source media="(prefers-color-scheme: dark)" secset="https://js2iiu.com/wp-content/uploads/2024/12/adiftools_logo.png">
+    <source media="(prefers-color-scheme: dark)" srcset="https://js2iiu.com/wp-content/uploads/2024/12/adiftools_logo.png">
     <img alt="adiftools Logo" src="https://js2iiu.com/wp-content/uploads/2024/12/adiftools_logo.png" width=500>
 </picture>
 
@@ -48,12 +48,12 @@ This tool allows you to easily load all QSO data from an ADIF file into a pandas
   - Parameter:
     - `file_path`: str or path-like or binary file-like
       - A path, or a Python file-like object of adi file to save
-    - Returns:
-      - `None`
+  - Returns:
+    - `None`
 
 - **Save ADIF data as pickle file**: Save the DataFrame with the ADIF loaded to a pickle file.
   - Loading an ADIF file into a DataFrame can be quite time consuming.
-  - It is especially long if there are many QSOsin the ADIF file, and it is very cumbersome to read the data every time.
+  - It is especially long if there are many QSOs in the ADIF file, and it is very cumbersome to read the data every time.
   - It is recommended to serialize the ADIF data once loaded and save it in a pickle format, which is expected to be 50 times faster than loading a raw ADIF file.
   - Call signature:
     ```python
@@ -62,8 +62,8 @@ This tool allows you to easily load all QSO data from an ADIF file into a pandas
   - Parameter:
     - `file_path`: str or path-like or binary file-like
       - A path, or a Python file-like object of pickle file to save
-    - Returns:
-      - `None`
+  - Returns:
+    - `None`
 
 - **Load Pickle data**
   - Provides a way to read ADIF data once it has been loaded by ADIFParser and saved in a pickle file.
@@ -75,9 +75,9 @@ This tool allows you to easily load all QSO data from an ADIF file into a pandas
   - Parameter:
     - `file_path`: str or path-like or binary file-like
       - A path, or a Python file-like object of pickle file to read
-    - Returns:
-      - `pd.DataFrame`
-        - The created pandas.DataFrame instance includes QSO data from ADIF file 
+  - Returns:
+    - `pd.DataFrame`
+      - The created pandas.DataFrame instance includes QSO data from the ADIF file.
 
 - **Save ADIF data as excel file**: Save the DataFrame with the ADIF loaded to an excel file.
   - Call signature:
@@ -87,8 +87,8 @@ This tool allows you to easily load all QSO data from an ADIF file into a pandas
   - Parameter:
     - `file_path`: str or path-like or binary file-like
       - A path, or a Python file-like object of excel file to save
-    - Returns:
-      - `None`
+  - Returns:
+    - `None`
 
 - **Generate Callsign file**
   - Outputs call sign data without duplicates from data read from an ADIF file as a text file. The text file will contain one callsign per line.
@@ -231,7 +231,7 @@ This tool allows you to easily load all QSO data from an ADIF file into a pandas
     - Returns:
       - `number`: area number, `None`: n/a 
 
-Note: `adiftools` is not support ADX file format at this moment.
+Note: `adiftools` does not support ADX file format at this moment.
 
 ## Install
 
@@ -239,7 +239,7 @@ adiftools has been tested against Python 3.11, 3.12, and 3.13. It may work with 
 
 It is recommended to create a virtual environment and install adiftools inside the virtual environment.
 
-Binary installers for the latest released version is available via PyPI: [adiftools · PyPI](https://pypi.org/project/adiftools/).
+Binary installers for the latest released version are available via PyPI: [adiftools · PyPI](https://pypi.org/project/adiftools/).
 
 ```sh
 pip install adiftools
@@ -250,7 +250,7 @@ If you are using an older version of adiftools, please use the following command
 pip install -U adiftools
 ```
 
-Unfortunately, if you no longer need adiftools, you can uninstall it with the following command.
+If you no longer need adiftools, you can uninstall it with the following command.
 ```sh
 pip uninstall adiftools
 ```
@@ -265,6 +265,7 @@ pip install -i https://test.pypi.org/simple/ adiftools==0.0.5
 ```
 
 ## Getting Started
+
 The first step in utilizing adiftools is to load an ADIF file; files that follow the ADIF standard can be loaded. After loading an adif file, you can perform graphing and other operations. Please refer to this page for ADIF standard. [The Independent ADIF Site](https://www.adif.org/)
 
 Example:
@@ -274,7 +275,7 @@ import adiftools.adiftools as adiftools
 adi = adiftools.ADIFParser()
 
 df_adi = adi.read_adi('sample.adi') # Use your own adi file
-print(df)
+print(df_adi)
 ```
 
 ## Dependencies
@@ -288,16 +289,17 @@ You can install all dependencies with:
 ```sh
 pip install adiftools
 ```
+
 ## FAQ / Troubleshooting
 
 - If you encounter an error related to subprocess or wheel, please try installing `wheel` with `pip install wheel`.
 - For other common issues, please refer to the [adiftools issue tracker](https://github.com/JS2IIU-MH/adiftools-dev/issues) or open a new issue for support.
 
-## Licence
+## License
 [MIT](LICENSE)
 
 ## 日本語での情報提供
-Information in Japanese is available on the following blogs. Information updates are prioritised on Github, and information updates on the following blogs are slightly delayed.
+Information in Japanese is available on the following blogs. Information updates are prioritized on GitHub, and information updates on the following blogs are slightly delayed.
 - [adiftools | アマチュア無線局JS2IIU](https://js2iiu.com/adiftools/)
 
 TU de JS2IIU 73
