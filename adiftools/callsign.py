@@ -4,7 +4,7 @@ import re
 def is_ja_call(call_sign: str):
     ''' Determine if it is a JA call sign '''
     # input data check
-    if type(call_sign) is not str:
+    if not isinstance(call_sign, str):
         raise TypeError('Call sign must be string')
 
     if len(call_sign) < 4:

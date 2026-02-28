@@ -1,10 +1,11 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
+from pandas.api.types import PeriodDtype
 
 try:
     from adiftools.errors import AdifParserError
-except ModuleNotFoundError or ImportError:
+except (ModuleNotFoundError, ImportError):
     from errors import AdifParserError
 
 matplotlib.use('Agg')
@@ -20,8 +21,8 @@ def monthly_qso(df, fname):
     df = df.groupby('QSO_DATE').size().reset_index(name='counts')
     df.set_index('QSO_DATE', inplace=True)
 
-    fig, ax = plt.subplots(figsize=(12, 6))
-    bar = ax.bar(df.index.astype(str), df['counts'])
+    _, ax = plt.subplots(figsize=(12, 6))
+    bars = ax.bar(df.index.astype(str), df['counts'])
 
     # basic graph elements
     plt.title('Monthly QSO')
@@ -38,10 +39,10 @@ def monthly_qso(df, fname):
     else:
         text_rotation = 90
 
-    for rect in bar:
+    for rect in bars:
         height = rect.get_height()
         ax.text(rect.get_x() + rect.get_width() / 2., height + 1,
-                '%d' % int(height), ha='center', va='bottom',
+                f'{int(height):d}', ha='center', va='bottom',
                 size='small', rotation=text_rotation)
 
     # set layout and save to file
@@ -78,7 +79,6 @@ def monthly_band_qso(df, fname):
     if 'BAND' not in df.columns:
         raise ValueError('BAND column not found in DataFrame')
 
-    from pandas.api.types import PeriodDtype
     if isinstance(df['QSO_DATE'].dtype, PeriodDtype):
         df['QSO_DATE'] = df['QSO_DATE'].dt.to_timestamp()
     else:
@@ -86,7 +86,6 @@ def monthly_band_qso(df, fname):
     df['QSO_MONTH'] = df['QSO_DATE'].dt.to_period('M').dt.to_timestamp()
     grouped = df.groupby(['QSO_MONTH', 'BAND']).size().unstack(fill_value=0)
     grouped = grouped.reset_index()
-    # grouped['QSO_MONTH'] = grouped['QSO_MONTH'].astype(str)
     grouped['QSO_MONTH'] = grouped['QSO_MONTH'].dt.strftime('%Y-%m')
 
     # BANDごとの色テーブル（必要に応じて編集）
@@ -110,15 +109,13 @@ def monthly_band_qso(df, fname):
         # 必要に応じて追加
     }
 
-    fig, ax = plt.subplots(figsize=(12, 6))
+    _, ax = plt.subplots(figsize=(12, 6))
     bands = [col for col in grouped.columns if col != 'QSO_MONTH']
 
     # 未定義BANDにはカラーマップから重複しない色を割り当て
-    # import itertools
-    import matplotlib as mpl
     cmap = plt.get_cmap('tab20')
     used_colors = set(band_colors.values())
-    color_cycle = (mpl.colors.to_hex(cmap(i)) for i in range(cmap.N))
+    color_cycle = (matplotlib.colors.to_hex(cmap(i)) for i in range(cmap.N))
     band_color_map = band_colors.copy()
     for band in bands:
         if band not in band_color_map:
@@ -142,12 +139,9 @@ def monthly_band_qso(df, fname):
     plt.legend(title='Band', loc='upper right')
 
     # 各バーの上に合計値を表示
+    text_rotation = 0 if len(grouped) < 24 else 90
     for idx, row in grouped.iterrows():
-        total = sum([row[band] for band in bands])
-        if len(grouped) < 24:
-            text_rotation = 0
-        else:
-            text_rotation = 90
+        total = sum(row[band] for band in bands)
         ax.text(idx, total + 1, str(int(total)),
                 ha='center', va='bottom', size='small',
                 rotation=text_rotation)
