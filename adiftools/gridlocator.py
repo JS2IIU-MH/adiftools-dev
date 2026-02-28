@@ -11,7 +11,7 @@ def _alpha_to_lonlat(alpha):
         tuple: Longitude and Latitude coefficient in degrees.
     """
 
-    if type(alpha) is not str:
+    if not isinstance(alpha, str):
         raise ValueError('Invalid alpha type')
 
     return (ord(alpha) - 65) * 20 - 180
@@ -27,7 +27,7 @@ def _alpha_to_sub(alpha):
         float: Sub square coefficient in degrees.
     """
 
-    if type(alpha) is not str:
+    if not isinstance(alpha, str):
         raise ValueError('Invalid alpha type')
 
     return (ord(alpha) - 65 + 0.5) / 12

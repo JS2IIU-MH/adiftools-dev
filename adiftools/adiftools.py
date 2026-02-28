@@ -7,22 +7,13 @@ import pandas as pd
 
 try:
     from adiftools.errors import AdifParserError
-except ModuleNotFoundError or ImportError:
-    from errors import AdifParserError
-
-try:
     from adiftools.adifgraph import monthly_qso, band_percentage
-except ModuleNotFoundError or ImportError:
-    from adifgraph import monthly_qso, band_percentage
-
-try:
     from adiftools.gridlocator import gl_to_latlon, latlon_to_gl, get_distance
-except ModuleNotFoundError or ImportError:
-    from gridlocator import gl_to_latlon, latlon_to_gl, get_distance
-
-try:
     from adiftools.callsign import is_ja_call, get_area_num
-except ModuleNotFoundError or ImportError:
+except (ModuleNotFoundError, ImportError):
+    from errors import AdifParserError
+    from adifgraph import monthly_qso, band_percentage
+    from gridlocator import gl_to_latlon, latlon_to_gl, get_distance
     from callsign import is_ja_call, get_area_num
 
 
@@ -33,6 +24,7 @@ class ADIFParser():
         ''' initialize ADIFParser class '''
         self._fields = []
         self._number_of_records = 0
+        self._temp_dfs = []
         # Pre-compile regex pattern for better performance
         self._adif_pattern = re.compile(r'<(.*?):([^>]+)>([^<]*)')
         self.df_adif = pd.DataFrame()
@@ -41,7 +33,7 @@ class ADIFParser():
         ''' read adi file and return a DataFrame '''
         records_list = []
 
-        with open(file_path, 'r') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             lines = file.readlines()
 
         # skip adif header part
@@ -117,7 +109,7 @@ class ADIFParser():
 
         calls = set(self.df_adif['CALL'].tolist())
 
-        with open(file_path, 'w') as f:
+        with open(file_path, 'w', encoding='utf-8') as f:
             for call in calls:
                 f.write(f'{call}\n')
 
@@ -132,7 +124,7 @@ class ADIFParser():
 
         # generate adif header
         header = self._create_adif_header()
-        with open(file_path, 'w') as f:
+        with open(file_path, 'w', encoding='utf-8') as f:
             f.write(header)
             for i in range(len(self.df_adif)):
                 record = self.df_adif.iloc[i].to_dict()
@@ -181,10 +173,7 @@ class ADIFParser():
 
     @property
     def is_loaded(self):
-        if len(self.df_adif) > 0:
-            return True
-        else:
-            return False
+        return len(self.df_adif) > 0
 
     # Plot related methods
     def plot_monthly(self, file_path):
@@ -205,7 +194,7 @@ class ADIFParser():
         records_list = []
         in_header = True
 
-        with open(file_path, 'r') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             for line in file:
                 line = line.strip()
 
@@ -224,23 +213,19 @@ class ADIFParser():
 
                     # Process in chunks to manage memory
                     if len(records_list) >= chunk_size:
-                        if not hasattr(self, '_temp_dfs'):
-                            self._temp_dfs = []
                         chunk_df = pd.DataFrame(records_list)
                         self._temp_dfs.append(chunk_df)
                         records_list = []
 
         # Process remaining records
         if records_list:
-            if not hasattr(self, '_temp_dfs'):
-                self._temp_dfs = []
             chunk_df = pd.DataFrame(records_list)
             self._temp_dfs.append(chunk_df)
 
         # Combine all chunks
-        if hasattr(self, '_temp_dfs') and self._temp_dfs:
+        if self._temp_dfs:
             df = pd.concat(self._temp_dfs, ignore_index=True)
-            del self._temp_dfs  # Clean up
+            self._temp_dfs = []  # Clean up
         else:
             df = pd.DataFrame()
 
@@ -263,7 +248,7 @@ class ADIFParser():
             num_processes = mp.cpu_count()
 
         # Read all lines first to split work
-        with open(file_path, 'r') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             lines = file.readlines()
 
         # Find start of data
