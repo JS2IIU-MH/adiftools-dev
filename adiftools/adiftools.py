@@ -64,35 +64,35 @@ class ADIFParser():
                 d = self._parse_adif_record(record)
                 records_list.append(d)
 
-        # Build DataFrame once from all records
-        if records_list:
-            df = pd.DataFrame(records_list)
-        else:
-            df = pd.DataFrame()
+        return self._finalize_read(records_list, enable_timestamp)
 
+    def _validate_loaded(self):
+        ''' raise AdifParserError if no data has been loaded '''
+        if len(self.df_adif) == 0:
+            raise AdifParserError('No records found in ADIF file')
+
+    def _finalize_read(self, records_list, enable_timestamp):
+        ''' build DataFrame from records, update state, and return it '''
+        df = pd.DataFrame(records_list) if records_list else pd.DataFrame()
         self.df_adif = df
         self._fields = df.columns.tolist()
         self._number_of_records = len(df)
 
-        if len(df) == 0:
-            raise AdifParserError('No records found in ADIF file')
+        self._validate_loaded()
 
         if enable_timestamp:
-            # add timestamp column to DataFrame
             df = self._add_timestamp(df)
 
         return df
 
     def to_csv(self, file_path):
         ''' save ADIF DataFrame to csv file '''
-        if len(self.df_adif) == 0:
-            raise AdifParserError('No records found in ADIF file')
+        self._validate_loaded()
         self.df_adif.to_csv(file_path, index=False)
 
     def to_excel(self, file_path):
         ''' save ADIF DataFrame to excel file '''
-        if len(self.df_adif) == 0:
-            raise AdifParserError('No records found in ADIF file')
+        self._validate_loaded()
         self.df_adif.to_excel(file_path, index=False)
 
     def read_pickle(self, file_path):
@@ -106,14 +106,12 @@ class ADIFParser():
 
     def to_pickle(self, file_path):
         ''' save DataFrame to pickle file '''
-        if len(self.df_adif) == 0:
-            raise AdifParserError('No records found in ADIF file')
+        self._validate_loaded()
         self.df_adif.to_pickle(file_path)
 
     def call_to_txt(self, file_path='./call.txt') -> None:
         ''' output callsign in DataFrame to text file '''
-        if len(self.df_adif) == 0:
-            raise AdifParserError('No records found in ADIF file')
+        self._validate_loaded()
 
         calls = set(self.df_adif['CALL'].tolist())
 
@@ -123,8 +121,7 @@ class ADIFParser():
 
     def to_adi(self, file_path):
         ''' save DataFrame to adi file '''
-        if len(self.df_adif) == 0:
-            raise AdifParserError('No records found in ADIF file')
+        self._validate_loaded()
 
         # file extension check
         if file_path[-4:] != '.adi' and file_path[-4:] != '.ADI':
@@ -181,28 +178,24 @@ class ADIFParser():
 
     @property
     def is_loaded(self):
-        if len(self.df_adif) > 0:
-            return True
-        else:
-            return False
+        return len(self.df_adif) > 0
 
     # Plot related methods
     def plot_monthly(self, file_path):
         ''' plot monthly QSO bar chart'''
-        if len(self.df_adif) == 0:
-            raise AdifParserError('No records found in ADIF file')
+        self._validate_loaded()
         monthly_qso(self.df_adif, file_path)
 
     def plot_band_percentage(self, file_path):
         ''' plot band percentage pie chart'''
-        if len(self.df_adif) == 0:
-            raise AdifParserError('No records found in ADIF file')
+        self._validate_loaded()
         band_percentage(self.df_adif, file_path)
 
     def read_adi_streaming(self, file_path, enable_timestamp=False,
                            chunk_size=1000):
         ''' read adi file using streaming approach for large files '''
         records_list = []
+        temp_dfs = []
         in_header = True
 
         with open(file_path, 'r') as file:
@@ -218,43 +211,27 @@ class ADIFParser():
 
                 # Process ADIF record. ADIF fields can be in any order,
                 # so look for CALL anywhere and ensure record ends with <EOR>.
-                if '<CALL' in line.upper() and line.upper().endswith('<EOR>'):
-                    d = self._parse_adif_record(line)
+                upper_line = line.upper()
+                if '<CALL' in upper_line and upper_line.endswith('<EOR>'):
+                    d = self._parse_adif_record(upper_line)
                     records_list.append(d)
 
                     # Process in chunks to manage memory
                     if len(records_list) >= chunk_size:
-                        if not hasattr(self, '_temp_dfs'):
-                            self._temp_dfs = []
-                        chunk_df = pd.DataFrame(records_list)
-                        self._temp_dfs.append(chunk_df)
+                        temp_dfs.append(pd.DataFrame(records_list))
                         records_list = []
 
         # Process remaining records
         if records_list:
-            if not hasattr(self, '_temp_dfs'):
-                self._temp_dfs = []
-            chunk_df = pd.DataFrame(records_list)
-            self._temp_dfs.append(chunk_df)
+            temp_dfs.append(pd.DataFrame(records_list))
 
         # Combine all chunks
-        if hasattr(self, '_temp_dfs') and self._temp_dfs:
-            df = pd.concat(self._temp_dfs, ignore_index=True)
-            del self._temp_dfs  # Clean up
-        else:
-            df = pd.DataFrame()
+        all_records = (pd.concat(temp_dfs, ignore_index=True)
+                       if temp_dfs else [])
 
-        self.df_adif = df
-        self._fields = df.columns.tolist()
-        self._number_of_records = len(df)
-
-        if len(df) == 0:
-            raise AdifParserError('No records found in ADIF file')
-
-        if enable_timestamp:
-            df = self._add_timestamp(df)
-
-        return df
+        return self._finalize_read(
+            all_records.to_dict('records') if len(all_records) else [],
+            enable_timestamp)
 
     def read_adi_parallel(self, file_path, enable_timestamp=False,
                           num_processes=None):
@@ -290,33 +267,16 @@ class ADIFParser():
         for chunk_records in results:
             all_records.extend(chunk_records)
 
-        # Build final DataFrame
-        if all_records:
-            df = pd.DataFrame(all_records)
-        else:
-            df = pd.DataFrame()
-
-        self.df_adif = df
-        self._fields = df.columns.tolist()
-        self._number_of_records = len(df)
-
-        if len(df) == 0:
-            raise AdifParserError('No records found in ADIF file')
-
-        if enable_timestamp:
-            df = self._add_timestamp(df)
-
-        return df
+        return self._finalize_read(all_records, enable_timestamp)
 
     def _process_chunk(self, chunk_lines):
         ''' Process a chunk of lines and return list of parsed records '''
         records = []
-        pattern = re.compile(r'<(.*?):(\d+)>([^<]*)')
 
         for line in chunk_lines:
-            line = line.strip()
-            if '<CALL' in line.upper() and line.upper().endswith('<EOR>'):
-                fields = pattern.findall(line)
+            line = line.strip().upper()
+            if '<CALL' in line and line.endswith('<EOR>'):
+                fields = self._adif_pattern.findall(line)
                 d = {field[0].upper().strip(): field[2].upper().strip()
                      for field in fields}
                 records.append(d)
