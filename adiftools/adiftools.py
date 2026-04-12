@@ -226,12 +226,13 @@ class ADIFParser():
             temp_dfs.append(pd.DataFrame(records_list))
 
         # Combine all chunks
-        all_records = (pd.concat(temp_dfs, ignore_index=True)
-                       if temp_dfs else [])
+        if temp_dfs:
+            all_records = pd.concat(
+                temp_dfs, ignore_index=True).to_dict('records')
+        else:
+            all_records = []
 
-        return self._finalize_read(
-            all_records.to_dict('records') if len(all_records) else [],
-            enable_timestamp)
+        return self._finalize_read(all_records, enable_timestamp)
 
     def read_adi_parallel(self, file_path, enable_timestamp=False,
                           num_processes=None):
