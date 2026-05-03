@@ -77,7 +77,7 @@ This tool allows you to easily load all QSO data from an ADIF file into a pandas
       - A path, or a Python file-like object of pickle file to read
   - Returns:
     - `pd.DataFrame`
-      - The created pandas.DataFrame instance includes QSO data from the ADIF file.
+      - The created `pandas DataFrame` instance includes QSO data from the ADIF file.
 
 - **Save ADIF data as excel file**: Save the DataFrame with the ADIF loaded to an excel file.
   - Call signature:
