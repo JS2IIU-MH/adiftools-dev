@@ -34,3 +34,6 @@ def test_import_does_not_force_matplotlib_backend(monkeypatch):
     importlib.reload(adifgraph)
 
     assert calls == []
+
+    monkeypatch.undo()
+    importlib.reload(adifgraph)
