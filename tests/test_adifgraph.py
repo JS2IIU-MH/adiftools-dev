@@ -26,11 +26,10 @@ def test_monthly_band_qso():
 
 def test_import_does_not_force_matplotlib_backend(monkeypatch):
     calls = []
-    original_use = matplotlib.use
 
     def spy_use(*args, **kwargs):
         calls.append((args, kwargs))
-        return original_use(*args, **kwargs)
+        return None
 
     monkeypatch.setattr(matplotlib, 'use', spy_use)
     importlib.reload(adifgraph)
