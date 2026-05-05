@@ -29,7 +29,6 @@ def test_import_does_not_force_matplotlib_backend(monkeypatch):
 
     def spy_use(*args, **kwargs):
         calls.append((args, kwargs))
-        return None
 
     monkeypatch.setattr(matplotlib, 'use', spy_use)
     importlib.reload(adifgraph)
