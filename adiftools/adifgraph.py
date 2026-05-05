@@ -1,4 +1,3 @@
-import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -6,8 +5,6 @@ try:
     from adiftools.errors import AdifParserError
 except ModuleNotFoundError or ImportError:
     from errors import AdifParserError
-
-matplotlib.use('Agg')
 
 
 def monthly_qso(df, fname):
