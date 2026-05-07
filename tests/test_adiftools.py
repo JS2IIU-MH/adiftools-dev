@@ -19,6 +19,32 @@ def prep_data():
     return df
 
 
+@pytest.fixture
+def qrz_multiline_adi_file(tmp_path):
+    ''' create a QRZ-like multiline ADIF file for parser tests '''
+    content = '''QRZLogbook download sample
+<ADIF_VER:5>3.1.1
+<PROGRAMID:10>QRZLogbook
+<eoh>
+<qso_date:8>20260505
+<time_on:4>1035
+<mode:3>FT8
+<band:3>80m
+<call:5>KF8XW
+<eor>
+
+<mode:3>FT8
+<time_on:4>1037
+<call:6>KB3LNM
+<qso_date:8>20260505
+<band:3>80m
+<eor>
+'''
+    file_path = tmp_path / 'sample_qrz_multiline.adi'
+    file_path.write_text(content, encoding='utf-8')
+    return str(file_path)
+
+
 def test_read_adi(prep_data):
     ''' test adif DataFrame '''
     assert prep_data.shape == (126, 14)
@@ -29,29 +55,29 @@ def test_read_adi(prep_data):
         'MY_GRIDSQUARE', 'COMMENT', 'GRIDSQUARE']
 
 
-def test_read_adi_qrz_multiline():
+def test_read_adi_qrz_multiline(qrz_multiline_adi_file):
     ''' test QRZ.com multiline ADIF format '''
     at = adiftools.ADIFParser()
-    df = at.read_adi('testdata/sample.adi')
+    df = at.read_adi(qrz_multiline_adi_file)
 
-    assert len(df) == 20
+    assert len(df) == 2
     assert 'CALL' in df.columns
     assert 'QSO_DATE' in df.columns
     assert 'TIME_ON' in df.columns
 
 
-def test_read_methods_consistency_qrz_multiline():
+def test_read_methods_consistency_qrz_multiline(qrz_multiline_adi_file):
     ''' test consistency across read methods for multiline records '''
     seq_parser = adiftools.ADIFParser()
     stream_parser = adiftools.ADIFParser()
     parallel_parser = adiftools.ADIFParser()
 
-    seq_df = seq_parser.read_adi('testdata/sample.adi')
-    stream_df = stream_parser.read_adi_streaming('testdata/sample.adi')
+    seq_df = seq_parser.read_adi(qrz_multiline_adi_file)
+    stream_df = stream_parser.read_adi_streaming(qrz_multiline_adi_file)
     parallel_df = parallel_parser.read_adi_parallel(
-        'testdata/sample.adi', num_processes=2)
+        qrz_multiline_adi_file, num_processes=2)
 
-    assert len(seq_df) == len(stream_df) == len(parallel_df) == 20
+    assert len(seq_df) == len(stream_df) == len(parallel_df) == 2
     assert set(seq_df.columns) == set(stream_df.columns)
     assert set(seq_df.columns) == set(parallel_df.columns)
 
