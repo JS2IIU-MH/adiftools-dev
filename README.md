@@ -23,6 +23,9 @@ This tool allows you to easily load all QSO data from an ADIF file into a pandas
 ## Main Features
 
 - **ADIF file parser**: Read ADIF file and convert to pandas DataFrame
+  - Supported ADIF record layouts:
+    - Single-line records (all fields for one QSO on one line ending with `<EOR>`)
+    - Multi-line records (fields split across multiple lines, one record ending with `<EOR>`), such as QRZ.com exports
   - Call signature:
     ```python
     ADIFParser.read_adi(file_path, enable_timestamp=False)

@@ -37,32 +37,61 @@ class ADIFParser():
         self._adif_pattern = re.compile(r'<(.*?):([^>]+)>([^<]*)')
         self.df_adif = pd.DataFrame()
 
-    def read_adi(self, file_path, enable_timestamp=False):
-        ''' read adi file and return a DataFrame '''
-        records_list = []
+    def _iter_record_texts(self, file_path):
+        ''' yield ADIF records separated by <EOR> from a file '''
+        in_header = True
+        record_buffer = ''
+
+        def process_text(text):
+            nonlocal record_buffer
+            record_buffer += f' {text.strip()}'
+
+            # Extract all complete records currently in the buffer.
+            while '<EOR>' in record_buffer.upper():
+                upper_buffer = record_buffer.upper()
+                eor_idx = upper_buffer.find('<EOR>')
+                record = upper_buffer[:eor_idx + 5].strip()
+                record_buffer = record_buffer[eor_idx + 5:]
+
+                if '<CALL' in record:
+                    yield record
 
         with open(file_path, 'r') as file:
-            lines = file.readlines()
+            for raw_line in file:
+                line = raw_line.strip()
+                if len(line) == 0:
+                    continue
 
-        # skip adif header part
-        start_line = 0
-        for i, line in enumerate(lines):
-            if ("<CALL" in line) or ("<call" in line):
-                start_line = i
-                break
+                upper_line = line.upper()
 
-        adif_data = lines[start_line:]
+                if in_header:
+                    if '<EOH>' in upper_line:
+                        in_header = False
+                        eoh_idx = upper_line.find('<EOH>')
+                        remainder = line[eoh_idx + 5:].strip()
+                        if remainder:
+                            for record in process_text(remainder):
+                                yield record
+                        continue
 
-        for record in adif_data:
-            record = record.strip()
-            record = record.upper()
+                    # Backward-compatible fallback for files without <EOH>.
+                    if '<CALL' in upper_line:
+                        in_header = False
+                        for record in process_text(line):
+                            yield record
+                    continue
 
-            # ADIF fields may appear in any order; check presence of CALL
-            # anywhere in the record (case-insensitive) and ensure record
-            # ends with <EOR> (case-insensitive).
-            if '<CALL' in record and record.endswith('<EOR>'):
-                d = self._parse_adif_record(record)
-                records_list.append(d)
+                for record in process_text(line):
+                    yield record
+
+    def _iter_parsed_records(self, file_path):
+        ''' yield parsed ADIF record dicts from file '''
+        for record_text in self._iter_record_texts(file_path):
+            yield self._parse_adif_record(record_text)
+
+    def read_adi(self, file_path, enable_timestamp=False):
+        ''' read adi file and return a DataFrame '''
+        records_list = list(self._iter_parsed_records(file_path))
 
         # Build DataFrame once from all records
         if records_list:
@@ -203,44 +232,25 @@ class ADIFParser():
                            chunk_size=1000):
         ''' read adi file using streaming approach for large files '''
         records_list = []
-        in_header = True
+        temp_dfs = []
 
-        with open(file_path, 'r') as file:
-            for line in file:
-                line = line.strip()
+        for record in self._iter_parsed_records(file_path):
+            records_list.append(record)
 
-                # Skip header until first CALL record
-                if in_header:
-                    if ("<CALL" in line) or ("<call" in line):
-                        in_header = False
-                    else:
-                        continue
-
-                # Process ADIF record. ADIF fields can be in any order,
-                # so look for CALL anywhere and ensure record ends with <EOR>.
-                if '<CALL' in line.upper() and line.upper().endswith('<EOR>'):
-                    d = self._parse_adif_record(line)
-                    records_list.append(d)
-
-                    # Process in chunks to manage memory
-                    if len(records_list) >= chunk_size:
-                        if not hasattr(self, '_temp_dfs'):
-                            self._temp_dfs = []
-                        chunk_df = pd.DataFrame(records_list)
-                        self._temp_dfs.append(chunk_df)
-                        records_list = []
+            # Process in chunks to manage memory
+            if len(records_list) >= chunk_size:
+                chunk_df = pd.DataFrame(records_list)
+                temp_dfs.append(chunk_df)
+                records_list = []
 
         # Process remaining records
         if records_list:
-            if not hasattr(self, '_temp_dfs'):
-                self._temp_dfs = []
             chunk_df = pd.DataFrame(records_list)
-            self._temp_dfs.append(chunk_df)
+            temp_dfs.append(chunk_df)
 
         # Combine all chunks
-        if hasattr(self, '_temp_dfs') and self._temp_dfs:
-            df = pd.concat(self._temp_dfs, ignore_index=True)
-            del self._temp_dfs  # Clean up
+        if temp_dfs:
+            df = pd.concat(temp_dfs, ignore_index=True)
         else:
             df = pd.DataFrame()
 
@@ -262,28 +272,25 @@ class ADIFParser():
         if num_processes is None:
             num_processes = mp.cpu_count()
 
-        # Read all lines first to split work
-        with open(file_path, 'r') as file:
-            lines = file.readlines()
+        records = list(self._iter_record_texts(file_path))
 
-        # Find start of data
-        start_line = 0
-        for i, line in enumerate(lines):
-            if ("<CALL" in line) or ("<call" in line):
-                start_line = i
-                break
+        if len(records) == 0:
+            raise AdifParserError('No records found in ADIF file')
 
-        adif_data = lines[start_line:]
+        num_processes = max(1, min(num_processes, len(records)))
 
-        # Split data into chunks for parallel processing
-        chunk_size = len(adif_data) // num_processes
+        # Split records into chunks for parallel processing
+        chunk_size = max(1, len(records) // num_processes)
         chunks = []
-        for i in range(0, len(adif_data), chunk_size):
-            chunks.append(adif_data[i:i + chunk_size])
+        for i in range(0, len(records), chunk_size):
+            chunks.append(records[i:i + chunk_size])
 
-        # Process chunks in parallel
-        with mp.Pool(processes=num_processes) as pool:
-            results = pool.map(self._process_chunk, chunks)
+        if num_processes == 1:
+            results = [self._process_chunk(chunk) for chunk in chunks]
+        else:
+            # Process chunks in parallel
+            with mp.Pool(processes=num_processes) as pool:
+                results = pool.map(self._process_chunk, chunks)
 
         # Combine results
         all_records = []
@@ -308,17 +315,13 @@ class ADIFParser():
 
         return df
 
-    def _process_chunk(self, chunk_lines):
-        ''' Process a chunk of lines and return list of parsed records '''
+    def _process_chunk(self, chunk_records):
+        ''' Process a chunk of records and return list of parsed records '''
         records = []
-        pattern = re.compile(r'<(.*?):(\d+)>([^<]*)')
 
-        for line in chunk_lines:
-            line = line.strip()
-            if '<CALL' in line.upper() and line.upper().endswith('<EOR>'):
-                fields = pattern.findall(line)
-                d = {field[0].upper().strip(): field[2].upper().strip()
-                     for field in fields}
+        for record in chunk_records:
+            if '<CALL' in record and record.endswith('<EOR>'):
+                d = self._parse_adif_record(record)
                 records.append(d)
 
         return records

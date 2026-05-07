@@ -29,6 +29,33 @@ def test_read_adi(prep_data):
         'MY_GRIDSQUARE', 'COMMENT', 'GRIDSQUARE']
 
 
+def test_read_adi_qrz_multiline():
+    ''' test QRZ.com multiline ADIF format '''
+    at = adiftools.ADIFParser()
+    df = at.read_adi('testdata/sample.adi')
+
+    assert len(df) == 20
+    assert 'CALL' in df.columns
+    assert 'QSO_DATE' in df.columns
+    assert 'TIME_ON' in df.columns
+
+
+def test_read_methods_consistency_qrz_multiline():
+    ''' test consistency across read methods for multiline records '''
+    seq_parser = adiftools.ADIFParser()
+    stream_parser = adiftools.ADIFParser()
+    parallel_parser = adiftools.ADIFParser()
+
+    seq_df = seq_parser.read_adi('testdata/sample.adi')
+    stream_df = stream_parser.read_adi_streaming('testdata/sample.adi')
+    parallel_df = parallel_parser.read_adi_parallel(
+        'testdata/sample.adi', num_processes=2)
+
+    assert len(seq_df) == len(stream_df) == len(parallel_df) == 20
+    assert set(seq_df.columns) == set(stream_df.columns)
+    assert set(seq_df.columns) == set(parallel_df.columns)
+
+
 def test_to_adi(prep_instance, tmp_path):
     out = tmp_path / 'sample_out.adi'
     prep_instance.to_adi(str(out))
