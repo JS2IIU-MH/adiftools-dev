@@ -7,22 +7,22 @@ import pandas as pd
 
 try:
     from adiftools.errors import AdifParserError
-except ModuleNotFoundError or ImportError:
+except (ModuleNotFoundError, ImportError):
     from errors import AdifParserError
 
 try:
     from adiftools.adifgraph import monthly_qso, band_percentage
-except ModuleNotFoundError or ImportError:
+except (ModuleNotFoundError, ImportError):
     from adifgraph import monthly_qso, band_percentage
 
 try:
     from adiftools.gridlocator import gl_to_latlon, latlon_to_gl, get_distance
-except ModuleNotFoundError or ImportError:
+except (ModuleNotFoundError, ImportError):
     from gridlocator import gl_to_latlon, latlon_to_gl, get_distance
 
 try:
     from adiftools.callsign import is_ja_call, get_area_num
-except ModuleNotFoundError or ImportError:
+except (ModuleNotFoundError, ImportError):
     from callsign import is_ja_call, get_area_num
 
 
